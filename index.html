@@ -43,6 +43,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     h1 i {
@@ -319,12 +320,55 @@
       color: #64748b;
       font-size: 13px;
     }
+
+    /* Scale toggle */
+    .scale-toggle {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 40px;
+      margin-left: auto;
+    }
+
+    .scale-toggle span {
+      font-weight: 500;
+      color: #334155;
+    }
+
+    .scale-toggle button {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      min-width: 100px;
+    }
+
+    .scale-toggle button:hover {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+
+    /* Ẩn tab content mặc định */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
   </style>
 </head>
 <body>
   <div class="app-wrapper">
-    <h1><i class="fas fa-calculator"></i> Smart Grade Calculator</h1>
-    <div class="sub">Tính điểm thông minh · Tự động làm tròn 0.25 → 0.3, 0.75 → 0.8</div>
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+      <h1><i class="fas fa-calculator"></i> Smart Grade Calculator</h1>
+      <div class="scale-toggle">
+        <span>Thang điểm</span>
+        <button id="scaleToggleBtn">10 (thập phân)</button>
+      </div>
+    </div>
+    <div class="sub">Tính điểm thông minh · Tự động làm tròn theo thang điểm</div>
 
     <!-- Tabs -->
     <div class="tabs" id="tabContainer">
@@ -339,7 +383,7 @@
       <div class="card">
         <div class="card-header"><i class="fas fa-bullseye"></i> Điểm HK2 cần để đạt mục tiêu cả năm</div>
         <div class="input-group">
-          <label><i class="fas fa-school"></i> Điểm TB HK1 (0-10)</label>
+          <label><i class="fas fa-school"></i> Điểm TB HK1 (0-<span class="scale-limit">10</span>)</label>
           <input type="text" id="hk1_input" placeholder="VD: 7.5 hoặc 7,5" value="7.5">
         </div>
         <div class="input-group">
@@ -354,7 +398,7 @@
     <!-- Tab 2: Tính điểm cuối kỳ cần -->
     <div id="tab2" class="tab-content">
       <div class="card">
-        <div class="card-header"><i class="fas fa-star"></i> Điểm cuối kỳ cần để đạt ĐTB mong muốn</div>
+        <div class="card-header"><i class="fas fa-star"></i> Điểm cuối kỳ cần để đạt ĐTBHK2 mong muốn</div>
         <div class="input-group">
           <label><i class="fas fa-list"></i> Điểm thường xuyên (cách nhau dấu cách)</label>
           <input type="text" id="tx_input" placeholder="VD: 8 7 9">
@@ -364,7 +408,7 @@
           <input type="text" id="gk_input" placeholder="VD: 8.0">
         </div>
         <div class="input-group">
-          <label><i class="fas fa-bullseye"></i> Điểm TB mục tiêu (cách nhau dấu cách)</label>
+          <label><i class="fas fa-bullseye"></i> Điểm TB HK2 mục tiêu (cách nhau dấu cách)</label>
           <input type="text" id="target_hk2_input" placeholder="VD: 6.5 8.0 9.0">
         </div>
         <button class="btn btn-primary" id="calcCKBtn"><i class="fas fa-calculator"></i> Tính điểm cuối kỳ cần</button>
@@ -427,34 +471,46 @@
     </div>
 
     <footer>
-      <i class="fas fa-cog"></i> Nhập điểm có thể dùng dấu phẩy hoặc chấm. Tự động làm tròn 0.25→0.3, 0.75→0.8
+      <i class="fas fa-cog"></i> Nhập điểm có thể dùng dấu phẩy hoặc chấm. Thang điểm có thể chuyển đổi.
     </footer>
   </div>
 
   <script>
     (function() {
-      // ----- HÀM TIỆN ÍCH LÀM TRÒN ĐIỂM -----
+      // Biến thang điểm toàn cục
+      let currentScale = 10; // 10 hoặc 100
+
+      // Hàm format theo thang điểm
       function formatScore(value) {
-        // Làm tròn theo quy tắc: nếu phần thập phân .25 → .3, .75 → .8
         let num = parseFloat(value);
         if (isNaN(num)) return '';
-        // Lấy phần thập phân 2 chữ số để kiểm tra .25 và .75
-        let rounded = Math.round(num * 100) / 100;
-        let decimal = rounded - Math.floor(rounded);
-        // Chuyển về 2 chữ số thập phân để so sánh
-        let dec2 = Math.round(decimal * 100);
-        if (dec2 === 25) {
-          rounded = Math.floor(rounded) + 0.3;
-        } else if (dec2 === 75) {
-          rounded = Math.floor(rounded) + 0.8;
+        if (currentScale === 10) {
+          // Làm tròn theo quy tắc 0.25 -> 0.3, 0.75 -> 0.8
+          let rounded = Math.round(num * 100) / 100;
+          let decimal = rounded - Math.floor(rounded);
+          let dec2 = Math.round(decimal * 100);
+          if (dec2 === 25) {
+            rounded = Math.floor(rounded) + 0.3;
+          } else if (dec2 === 75) {
+            rounded = Math.floor(rounded) + 0.8;
+          } else {
+            rounded = Math.round(rounded * 10) / 10;
+          }
+          return rounded;
         } else {
-          // Làm tròn 1 chữ số thập phân thông thường
-          rounded = Math.round(rounded * 10) / 10;
+          // Thang 100: làm tròn đến số nguyên gần nhất
+          return Math.round(num);
         }
-        return rounded;
       }
 
-      // Xử lý input: thay dấu phẩy thành chấm, trim, và format nếu là số
+      // Hàm kiểm tra giá trị có vượt quá thang điểm không
+      function isValidScore(value) {
+        let num = parseFloat(value);
+        if (isNaN(num)) return false;
+        return num >= 0 && num <= currentScale;
+      }
+
+      // Xử lý input: thay dấu phẩy thành chấm, trim, và format theo thang điểm
       function parseAndFormatInput(value) {
         if (!value) return '';
         let str = value.toString().replace(/,/g, '.').trim();
@@ -462,13 +518,27 @@
         let parts = str.split(/\s+/);
         let formatted = parts.map(p => {
           let num = parseFloat(p);
-          if (isNaN(num)) return p; // giữ nguyên nếu không phải số (ít khi)
+          if (isNaN(num)) return p;
+          // Giới hạn trong thang điểm
+          if (num > currentScale) num = currentScale;
+          if (num < 0) num = 0;
           return formatScore(num).toString();
         }).join(' ');
         return formatted;
       }
 
-      // Hàm chuẩn hóa input ngay khi người dùng nhập (sự kiện input)
+      // Tự động format lại tất cả input khi đổi thang điểm
+      function reformatAllInputs() {
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+          input.value = parseAndFormatInput(input.value);
+        });
+        // Cập nhật hiển thị giới hạn thang điểm
+        document.querySelectorAll('.scale-limit').forEach(el => {
+          el.textContent = currentScale;
+        });
+      }
+
+      // Thiết lập tự động format khi nhập
       function setupAutoFormat(inputElement) {
         inputElement.addEventListener('input', function(e) {
           let cursorPos = e.target.selectionStart;
@@ -476,17 +546,25 @@
           let newVal = parseAndFormatInput(oldVal);
           if (newVal !== oldVal) {
             e.target.value = newVal;
-            // Đặt lại vị trí cursor (có thể mất, nhưng tạm chấp nhận)
+            // Khôi phục cursor (có thể mất, nhưng tạm chấp nhận)
           }
         });
       }
 
-      // Áp dụng cho tất cả input quan trọng
+      // Áp dụng cho tất cả input
       document.querySelectorAll('input[type="text"]').forEach(input => {
         setupAutoFormat(input);
       });
 
-      // ----- HÀM TÍNH TOÁN CHUNG -----
+      // Nút chuyển đổi thang điểm
+      const scaleBtn = document.getElementById('scaleToggleBtn');
+      scaleBtn.addEventListener('click', function() {
+        currentScale = currentScale === 10 ? 100 : 10;
+        scaleBtn.textContent = currentScale === 10 ? '10 (thập phân)' : '100 (nguyên)';
+        reformatAllInputs();
+      });
+
+      // Hàm parse số từ chuỗi (mảng)
       function parseNumberArray(str) {
         if (!str.trim()) return [];
         return str.trim().split(/\s+/).map(s => {
@@ -498,6 +576,27 @@
       function parseOneNumber(str) {
         if (!str.trim()) return NaN;
         return parseFloat(str.trim().replace(/,/g, '.'));
+      }
+
+      // Hiển thị kết quả
+      function showResult(elementId, content, type = 'normal') {
+        let el = document.getElementById(elementId);
+        if (type === 'error') {
+          el.innerHTML = `<div style="color:#b91c1c;">${content}</div>`;
+        } else {
+          el.innerHTML = content;
+        }
+      }
+
+      // Kiểm tra mảng số có hợp lệ (trong thang điểm) không
+      function validateNumbers(arr, fieldName) {
+        for (let val of arr) {
+          if (val < 0 || val > currentScale) {
+            showResult('result_hk2', `❌ ${fieldName} phải từ 0 đến ${currentScale}`, 'error');
+            return false;
+          }
+        }
+        return true;
       }
 
       // ----- TAB CHUYỂN ĐỔI -----
@@ -515,8 +614,8 @@
       // ----- MODE 1: TÍNH ĐIỂM HK2 CẦN -----
       document.getElementById('calcHK2Btn').addEventListener('click', function() {
         let hk1 = parseOneNumber(document.getElementById('hk1_input').value);
-        if (isNaN(hk1) || hk1 < 0 || hk1 > 10) {
-          showResult('result_hk2', '❌ Điểm HK1 không hợp lệ (0-10)', 'error');
+        if (isNaN(hk1) || !isValidScore(hk1)) {
+          showResult('result_hk2', `❌ Điểm HK1 không hợp lệ (phải từ 0-${currentScale})`, 'error');
           return;
         }
         let targets = parseNumberArray(document.getElementById('targets_input').value);
@@ -524,9 +623,10 @@
           showResult('result_hk2', '❌ Vui lòng nhập ít nhất một mục tiêu', 'error');
           return;
         }
+        if (!validateNumbers(targets, 'Mục tiêu')) return;
+
         let html = '<ul>';
         targets.forEach(t => {
-          if (t < 0 || t > 10) return;
           let hk2Can = (3 * t - hk1) / 2;
           hk2Can = formatScore(hk2Can);
           html += `<li>🎯 ĐTBCN ≥ ${t} → cần HK2 ≥ <strong>${hk2Can}</strong></li>`;
@@ -540,24 +640,22 @@
         let txArr = parseNumberArray(document.getElementById('tx_input').value);
         let gk = parseOneNumber(document.getElementById('gk_input').value);
         let targets = parseNumberArray(document.getElementById('target_hk2_input').value);
-        if (txArr.length === 0) {
-          showResult('result_ck', '❌ Cần ít nhất một điểm thường xuyên', 'error');
-          return;
-        }
-        if (isNaN(gk) || gk < 0 || gk > 10) {
-          showResult('result_ck', '❌ Điểm giữa kỳ không hợp lệ', 'error');
+
+        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên')) return;
+        if (isNaN(gk) || !isValidScore(gk)) {
+          showResult('result_ck', `❌ Điểm giữa kỳ không hợp lệ (phải từ 0-${currentScale})`, 'error');
           return;
         }
         if (targets.length === 0) {
           showResult('result_ck', '❌ Nhập mục tiêu điểm TB HK2', 'error');
           return;
         }
+        if (!validateNumbers(targets, 'Mục tiêu')) return;
+
         let sumTx = txArr.reduce((a,b) => a + b, 0);
         let soLuongTx = txArr.length;
         let html = '<ul>';
         targets.forEach(t => {
-          if (t < 0 || t > 10) return;
-          // Công thức: ĐTBHK2 = (sumTx + 2*gk + 3*ck) / (soLuongTx + 5)
           let tongCan = t * (soLuongTx + 5);
           let ckCan = (tongCan - (sumTx + 2*gk)) / 3;
           ckCan = formatScore(ckCan);
@@ -570,12 +668,14 @@
       // ----- MODE 3: TÍNH ĐIỂM TB MÔN -----
       document.getElementById('calcTBMBtn').addEventListener('click', function() {
         let txArr = parseNumberArray(document.getElementById('tx_tbm').value);
-        let gk = parseOneNumber(document.getElementById('gk_tbm').value);
         let ck = parseOneNumber(document.getElementById('ck_tbm').value);
-        if (txArr.length === 0 || isNaN(gk) || isNaN(ck)) {
-          showResult('result_tbm', '❌ Vui lòng nhập đầy đủ điểm', 'error');
+
+        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên')) return;
+        if (isNaN(gk) || !isValidScore(gk) || isNaN(ck) || !isValidScore(ck)) {
+          showResult('result_tbm', `❌ Điểm giữa kỳ/cuối kỳ không hợp lệ (phải từ 0-${currentScale})`, 'error');
           return;
         }
+
         let sumTx = txArr.reduce((a,b) => a + b, 0);
         let soLuongTx = txArr.length;
         let dtb = (sumTx + 2*gk + 3*ck) / (soLuongTx + 5);
@@ -588,16 +688,16 @@
         let hk1 = parseOneNumber(document.getElementById('hk1_canam').value);
         let hk2 = parseOneNumber(document.getElementById('hk2_canam').value);
         let target = parseOneNumber(document.getElementById('target_canam').value);
-        
-        if (isNaN(hk1) || hk1 < 0 || hk1 > 10) {
-          showResult('result_nam', '❌ HK1 không hợp lệ', 'error');
+
+        if (isNaN(hk1) || !isValidScore(hk1)) {
+          showResult('result_nam', `❌ HK1 không hợp lệ (phải từ 0-${currentScale})`, 'error');
           return;
         }
 
         // Nếu có target và không có hk2 -> tính hk2 cần
         if (!isNaN(target) && isNaN(hk2)) {
-          if (target < 0 || target > 10) {
-            showResult('result_nam', '❌ Mục tiêu không hợp lệ', 'error');
+          if (!isValidScore(target)) {
+            showResult('result_nam', `❌ Mục tiêu không hợp lệ (phải từ 0-${currentScale})`, 'error');
             return;
           }
           let hk2Can = (3*target - hk1) / 2;
@@ -606,8 +706,8 @@
         } 
         // Nếu có cả hk1 và hk2 -> tính ĐTBCN
         else if (!isNaN(hk1) && !isNaN(hk2)) {
-          if (hk2 < 0 || hk2 > 10) {
-            showResult('result_nam', '❌ HK2 không hợp lệ', 'error');
+          if (!isValidScore(hk2)) {
+            showResult('result_nam', `❌ HK2 không hợp lệ (phải từ 0-${currentScale})`, 'error');
             return;
           }
           let dtbcn = (hk1 + 2*hk2) / 3;
@@ -619,17 +719,7 @@
         }
       });
 
-      // Helper hiển thị kết quả
-      function showResult(elementId, content, type = 'normal') {
-        let el = document.getElementById(elementId);
-        if (type === 'error') {
-          el.innerHTML = `<div style="color:#b91c1c;">${content}</div>`;
-        } else {
-          el.innerHTML = content;
-        }
-      }
-
-      // ----- LỊCH SỬ (đơn giản, lưu localstorage) -----
+      // ----- LỊCH SỬ -----
       let history = JSON.parse(localStorage.getItem('gradeHistory')) || [];
 
       function renderHistory() {
@@ -665,7 +755,6 @@
       };
 
       document.getElementById('saveHistoryBtn').addEventListener('click', function() {
-        // Xác định tab đang active và lấy kết quả tương ứng
         let activeTab = document.querySelector('.tab-btn.active');
         if (!activeTab) return;
         let tabId = activeTab.dataset.tab;
@@ -676,7 +765,7 @@
         else if (tabId === 'tab3') resultContent = document.getElementById('result_tbm').innerHTML;
         else if (tabId === 'tab4') resultContent = document.getElementById('result_nam').innerHTML;
 
-        if (!resultContent || resultContent.includes('❌') || resultContent === '') {
+        if (!resultContent || resultContent.includes('❌') || resultContent === '' || resultContent.includes('error')) {
           alert('Không có kết quả hợp lệ để lưu!');
           return;
         }
@@ -699,10 +788,11 @@
         }
       });
 
-      // Khởi tạo
+      // Khởi tạo hiển thị thang điểm
+      reformatAllInputs();
       renderHistory();
 
-      // Prefill một số input để demo
+      // Prefill demo
       document.getElementById('hk1_input').value = '7.5';
       document.getElementById('targets_input').value = '6.5 8.0 9.0';
       document.getElementById('tx_input').value = '8 7 9';
@@ -716,11 +806,5 @@
       document.getElementById('target_canam').value = '8.0';
     })();
   </script>
-  <style>
-    /* Ẩn tab content mặc định */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-  </style>
 </body>
 </html>
-

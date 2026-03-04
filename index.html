@@ -510,50 +510,30 @@
         return num >= 0 && num <= currentScale;
       }
 
-      // Xử lý input: thay dấu phẩy thành chấm, trim, và format theo thang điểm
-      function parseAndFormatInput(value) {
-        if (!value) return '';
-        let str = value.toString().replace(/,/g, '.').trim();
-        // Tách nếu có nhiều số (cách nhau khoảng trắng)
+      // Hàm xử lý và format một input (thay dấu phẩy, giới hạn, format)
+      function formatInputValue(input) {
+        let raw = input.value;
+        if (!raw.trim()) return;
+        // Thay dấu phẩy bằng chấm
+        let str = raw.replace(/,/g, '.').trim();
+        // Tách các phần (nếu có nhiều số cách nhau bằng khoảng trắng)
         let parts = str.split(/\s+/);
-        let formatted = parts.map(p => {
+        let formattedParts = parts.map(p => {
           let num = parseFloat(p);
-          if (isNaN(num)) return p;
+          if (isNaN(num)) return p; // giữ nguyên nếu không phải số
           // Giới hạn trong thang điểm
           if (num > currentScale) num = currentScale;
           if (num < 0) num = 0;
           return formatScore(num).toString();
-        }).join(' ');
-        return formatted;
+        });
+        input.value = formattedParts.join(' ');
       }
 
-      // Tự động format lại tất cả input khi đổi thang điểm
-      function reformatAllInputs() {
-        document.querySelectorAll('input[type="text"]').forEach(input => {
-          input.value = parseAndFormatInput(input.value);
-        });
-        // Cập nhật hiển thị giới hạn thang điểm
-        document.querySelectorAll('.scale-limit').forEach(el => {
-          el.textContent = currentScale;
-        });
-      }
-
-      // Thiết lập tự động format khi nhập
-      function setupAutoFormat(inputElement) {
-        inputElement.addEventListener('input', function(e) {
-          let cursorPos = e.target.selectionStart;
-          let oldVal = e.target.value;
-          let newVal = parseAndFormatInput(oldVal);
-          if (newVal !== oldVal) {
-            e.target.value = newVal;
-            // Khôi phục cursor (có thể mất, nhưng tạm chấp nhận)
-          }
-        });
-      }
-
-      // Áp dụng cho tất cả input
+      // Áp dụng format khi mất focus (blur) cho tất cả input
       document.querySelectorAll('input[type="text"]').forEach(input => {
-        setupAutoFormat(input);
+        input.addEventListener('blur', function() {
+          formatInputValue(this);
+        });
       });
 
       // Nút chuyển đổi thang điểm
@@ -561,7 +541,14 @@
       scaleBtn.addEventListener('click', function() {
         currentScale = currentScale === 10 ? 100 : 10;
         scaleBtn.textContent = currentScale === 10 ? '10 (thập phân)' : '100 (nguyên)';
-        reformatAllInputs();
+        // Cập nhật lại tất cả input
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+          formatInputValue(input);
+        });
+        // Cập nhật hiển thị giới hạn
+        document.querySelectorAll('.scale-limit').forEach(el => {
+          el.textContent = currentScale;
+        });
       });
 
       // Hàm parse số từ chuỗi (mảng)
@@ -589,10 +576,10 @@
       }
 
       // Kiểm tra mảng số có hợp lệ (trong thang điểm) không
-      function validateNumbers(arr, fieldName) {
+      function validateNumbers(arr, fieldName, resultElementId) {
         for (let val of arr) {
           if (val < 0 || val > currentScale) {
-            showResult('result_hk2', `❌ ${fieldName} phải từ 0 đến ${currentScale}`, 'error');
+            showResult(resultElementId, `❌ ${fieldName} phải từ 0 đến ${currentScale}`, 'error');
             return false;
           }
         }
@@ -623,7 +610,7 @@
           showResult('result_hk2', '❌ Vui lòng nhập ít nhất một mục tiêu', 'error');
           return;
         }
-        if (!validateNumbers(targets, 'Mục tiêu')) return;
+        if (!validateNumbers(targets, 'Mục tiêu', 'result_hk2')) return;
 
         let html = '<ul>';
         targets.forEach(t => {
@@ -641,7 +628,7 @@
         let gk = parseOneNumber(document.getElementById('gk_input').value);
         let targets = parseNumberArray(document.getElementById('target_hk2_input').value);
 
-        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên')) return;
+        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên', 'result_ck')) return;
         if (isNaN(gk) || !isValidScore(gk)) {
           showResult('result_ck', `❌ Điểm giữa kỳ không hợp lệ (phải từ 0-${currentScale})`, 'error');
           return;
@@ -650,7 +637,7 @@
           showResult('result_ck', '❌ Nhập mục tiêu điểm TB HK2', 'error');
           return;
         }
-        if (!validateNumbers(targets, 'Mục tiêu')) return;
+        if (!validateNumbers(targets, 'Mục tiêu', 'result_ck')) return;
 
         let sumTx = txArr.reduce((a,b) => a + b, 0);
         let soLuongTx = txArr.length;
@@ -668,9 +655,10 @@
       // ----- MODE 3: TÍNH ĐIỂM TB MÔN -----
       document.getElementById('calcTBMBtn').addEventListener('click', function() {
         let txArr = parseNumberArray(document.getElementById('tx_tbm').value);
+        let gk = parseOneNumber(document.getElementById('gk_tbm').value);
         let ck = parseOneNumber(document.getElementById('ck_tbm').value);
 
-        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên')) return;
+        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên', 'result_tbm')) return;
         if (isNaN(gk) || !isValidScore(gk) || isNaN(ck) || !isValidScore(ck)) {
           showResult('result_tbm', `❌ Điểm giữa kỳ/cuối kỳ không hợp lệ (phải từ 0-${currentScale})`, 'error');
           return;
@@ -788,22 +776,15 @@
         }
       });
 
-      // Khởi tạo hiển thị thang điểm
-      reformatAllInputs();
+      // Khởi tạo hiển thị thang điểm và format ban đầu
+      document.querySelectorAll('.scale-limit').forEach(el => {
+        el.textContent = currentScale;
+      });
+      // Format các input có sẵn (prefill)
+      document.querySelectorAll('input[type="text"]').forEach(input => {
+        formatInputValue(input);
+      });
       renderHistory();
-
-      // Prefill demo
-      document.getElementById('hk1_input').value = '7.5';
-      document.getElementById('targets_input').value = '6.5 8.0 9.0';
-      document.getElementById('tx_input').value = '8 7 9';
-      document.getElementById('gk_input').value = '8.0';
-      document.getElementById('target_hk2_input').value = '6.5 8.0 9.0';
-      document.getElementById('tx_tbm').value = '8 7 9';
-      document.getElementById('gk_tbm').value = '8';
-      document.getElementById('ck_tbm').value = '7.5';
-      document.getElementById('hk1_canam').value = '7.5';
-      document.getElementById('hk2_canam').value = '';
-      document.getElementById('target_canam').value = '8.0';
     })();
   </script>
 </body>

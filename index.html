@@ -3,342 +3,723 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Công cụ tính điểm học kỳ cần thiết để đạt mục tiêu.">
-  <meta name="keywords" content="tính điểm, học kỳ, công cụ học tập, tiếng Việt">
-  <title>Tính điểm học kỳ</title>
+  <meta name="description" content="Công cụ tính điểm thông minh - nhiều chế độ, giao diện hiện đại, tự động làm tròn theo quy tắc">
+  <title>Smart Grade Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background: #f5f7fa;
-      color: #333;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #f0f4fa 0%, #e6ecf5 100%);
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-    }
-
-    .container {
-      max-width: 600px;
-      width: 90%;
-      background: #ffffff;
       padding: 20px;
-      margin: 30px auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    h2 {
-      color: #0066cc;
-      margin-bottom: 10px;
+    .app-wrapper {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 i {
+      color: #3b82f6;
+      font-size: 32px;
+    }
+
+    .sub {
+      color: #475569;
+      margin-bottom: 24px;
+      font-size: 14px;
+      border-left: 4px solid #3b82f6;
+      padding-left: 12px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      padding: 10px 18px;
+      border: none;
+      background: transparent;
+      border-radius: 40px;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 15px;
+    }
+
+    .tab-btn i {
+      font-size: 16px;
+    }
+
+    .tab-btn:hover {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 10px 15px -3px #2563eb80;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #0f172a;
+      font-size: 18px;
+    }
+
+    .card-header i {
+      color: #3b82f6;
+      background: #dbeafe;
+      padding: 8px;
+      border-radius: 50%;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
     }
 
     label {
       display: block;
-      margin-top: 15px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    label i {
+      margin-right: 6px;
+      color: #3b82f6;
+      width: 18px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 16px;
+      transition: 0.2s;
+      background: #f8fafc;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #3b82f6;
+      outline: none;
+      background: white;
+      box-shadow: 0 0 0 3px #3b82f620;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: white;
+      color: #1e293b;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 6px -1px #2563eb80;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      border: none;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-outline {
+      border: 1px solid #cbd5e1;
+      background: white;
+    }
+
+    .btn-outline:hover {
+      background: #f1f5f9;
+    }
+
+    .result-box {
+      background: #f0f9ff;
+      border-radius: 20px;
+      padding: 20px;
+      margin-top: 20px;
+      border-left: 6px solid #2563eb;
+    }
+
+    .result-box ul {
+      list-style: none;
+    }
+
+    .result-box li {
+      padding: 10px 0;
+      border-bottom: 1px dashed #b0d4ff;
       font-weight: 500;
     }
 
-    input[type="number"],
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      margin-top: 20px;
-      background-color: #28a745;
-      color: white;
-      padding: 10px;
+    .result-box li:last-child {
       border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
     }
 
-    button:hover {
-      background-color: #218838;
+    .history-item {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #e2e8f0;
+      transition: 0.2s;
     }
 
-    button.delete {
-      background-color: #ff4444;
+    .history-item:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 4px 8px #3b82f620;
     }
 
-    button.delete:hover {
-      background-color: #cc0000;
-    }
-
-    button.edit {
-      background-color: #007bff;
-      padding: 5px 10px;
-      margin-left: 10px;
-      font-size: 12px;
-    }
-
-    button.edit:hover {
-      background-color: #0056b3;
-    }
-
-    ul {
-      padding-left: 20px;
-      margin-top: 15px;
-    }
-
-    li {
-      margin-bottom: 15px;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-    }
-
-    .output {
-      background-color: #f1f1f1;
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 10px;
-      transition: opacity 0.3s ease;
-      opacity: 1;
-    }
-
-    .error {
-      color: red;
-      font-size: 14px;
-      margin-top: 5px;
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
     }
 
     .history-title {
       display: flex;
       align-items: center;
-      margin-bottom: 5px;
-    }
-
-    .history-title input {
-      width: 150px;
-      margin-right: 10px;
-      display: none;
+      gap: 8px;
     }
 
     .history-title span {
-      font-weight: bold;
+      font-weight: 600;
+      background: #dbeafe;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 13px;
+      color: #1e40af;
     }
 
-    @media (max-width: 600px) {
-      h2 {
-        font-size: 20px;
-      }
+    .history-time {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .history-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #64748b;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+
+    .history-actions button:hover {
+      color: #0f172a;
+    }
+
+    .flex-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .target-badge {
+      background: #2563eb10;
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 14px;
+      border: 1px dashed #2563eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .error-message {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 24px;
+      color: #64748b;
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Tính điểm trung bình học kỳ 2 cần thiết</h2>
-    <label for="dtb_hk1">Nhập điểm trung bình HK1 (0-10):</label>
-    <input type="number" id="dtb_hk1" step="0.1" min="0" max="10">
-    <div id="error_hk1" class="error"></div>
-    <div id="ketqua_hk2" class="output"></div>
+  <div class="app-wrapper">
+    <h1><i class="fas fa-calculator"></i> Smart Grade Calculator</h1>
+    <div class="sub">Tính điểm thông minh · Tự động làm tròn 0.25 → 0.3, 0.75 → 0.8</div>
 
-    <h2>Tính điểm cuối kỳ 2 cần thiết</h2> <!-- Đổi tiêu đề -->
-    <label for="diem_tx">Nhập các điểm thường xuyên (cách nhau bởi dấu cách, 0-10):</label>
-    <input type="text" id="diem_tx">
-    <div id="error_tx" class="error"></div>
+    <!-- Tabs -->
+    <div class="tabs" id="tabContainer">
+      <button class="tab-btn active" data-tab="tab1"><i class="fas fa-chart-line"></i> HK2 cần</button>
+      <button class="tab-btn" data-tab="tab2"><i class="fas fa-file-signature"></i> Cuối kỳ cần</button>
+      <button class="tab-btn" data-tab="tab3"><i class="fas fa-layer-group"></i> Điểm TB môn</button>
+      <button class="tab-btn" data-tab="tab4"><i class="fas fa-calendar-alt"></i> Cả năm</button>
+    </div>
 
-    <label for="diem_gk">Nhập điểm giữa kỳ (0-10):</label>
-    <input type="number" id="diem_gk" step="0.1" min="0" max="10">
-    <div id="error_gk" class="error"></div>
-    <div id="ketqua_ck" class="output"></div>
+    <!-- Tab 1: Tính điểm HK2 cần -->
+    <div id="tab1" class="tab-content active">
+      <div class="card">
+        <div class="card-header"><i class="fas fa-bullseye"></i> Điểm HK2 cần để đạt mục tiêu cả năm</div>
+        <div class="input-group">
+          <label><i class="fas fa-school"></i> Điểm TB HK1 (0-10)</label>
+          <input type="text" id="hk1_input" placeholder="VD: 7.5 hoặc 7,5" value="7.5">
+        </div>
+        <div class="input-group">
+          <label><i class="fas fa-bullseye"></i> Mục tiêu ĐTBCN (cách nhau bằng dấu cách)</label>
+          <input type="text" id="targets_input" value="6.5 8.0 9.0" placeholder="VD: 6.5 8.0 9.0">
+        </div>
+        <button class="btn btn-primary" id="calcHK2Btn"><i class="fas fa-calculator"></i> Tính điểm HK2 cần</button>
+        <div id="result_hk2" class="result-box"></div>
+      </div>
+    </div>
 
-    <button onclick="luuLichSu()">Lưu kết quả</button>
+    <!-- Tab 2: Tính điểm cuối kỳ cần -->
+    <div id="tab2" class="tab-content">
+      <div class="card">
+        <div class="card-header"><i class="fas fa-star"></i> Điểm cuối kỳ cần để đạt ĐTBHK2 mong muốn</div>
+        <div class="input-group">
+          <label><i class="fas fa-list"></i> Điểm thường xuyên (cách nhau dấu cách)</label>
+          <input type="text" id="tx_input" placeholder="VD: 8 7 9">
+        </div>
+        <div class="input-group">
+          <label><i class="fas fa-clock"></i> Điểm giữa kỳ</label>
+          <input type="text" id="gk_input" placeholder="VD: 8.0">
+        </div>
+        <div class="input-group">
+          <label><i class="fas fa-bullseye"></i> Điểm TB HK2 mục tiêu (cách nhau dấu cách)</label>
+          <input type="text" id="target_hk2_input" placeholder="VD: 6.5 8.0 9.0">
+        </div>
+        <button class="btn btn-primary" id="calcCKBtn"><i class="fas fa-calculator"></i> Tính điểm cuối kỳ cần</button>
+        <div id="result_ck" class="result-box"></div>
+      </div>
+    </div>
 
-    <h2>Lịch sử tính toán</h2>
-    <button class="delete" onclick="xoaLichSu()">Xóa toàn bộ lịch sử</button>
-    <div id="lich_su" class="output"></div>
+    <!-- Tab 3: Tính điểm TB môn -->
+    <div id="tab3" class="tab-content">
+      <div class="card">
+        <div class="card-header"><i class="fas fa-chart-pie"></i> Tính điểm trung bình môn</div>
+        <div class="input-group">
+          <label><i class="fas fa-list"></i> Điểm thường xuyên (hệ số 1) - cách nhau dấu cách</label>
+          <input type="text" id="tx_tbm" placeholder="VD: 8 7.5 9">
+        </div>
+        <div class="input-group">
+          <label><i class="fas fa-clock"></i> Điểm giữa kỳ (hệ số 2)</label>
+          <input type="text" id="gk_tbm" placeholder="VD: 8.0">
+        </div>
+        <div class="input-group">
+          <label><i class="fas fa-star"></i> Điểm cuối kỳ (hệ số 3)</label>
+          <input type="text" id="ck_tbm" placeholder="VD: 7.5">
+        </div>
+        <button class="btn btn-primary" id="calcTBMBtn"><i class="fas fa-calculator"></i> Tính điểm TB môn</button>
+        <div id="result_tbm" class="result-box"></div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Tính điểm cả năm -->
+    <div id="tab4" class="tab-content">
+      <div class="card">
+        <div class="card-header"><i class="fas fa-calendar-check"></i> Cả năm: tính HK2 cần hoặc điểm cả năm</div>
+        <div class="flex-row">
+          <div style="flex:1">
+            <label><i class="fas fa-school"></i> Điểm HK1</label>
+            <input type="text" id="hk1_canam" placeholder="VD: 7.0">
+          </div>
+          <div style="flex:1">
+            <label><i class="fas fa-school"></i> Điểm HK2</label>
+            <input type="text" id="hk2_canam" placeholder="Điểm HK2 (nếu có)">
+          </div>
+        </div>
+        <div class="input-group">
+          <label><i class="fas fa-bullseye"></i> Mục tiêu ĐTBCN (nếu muốn tính HK2 cần)</label>
+          <input type="text" id="target_canam" placeholder="VD: 8.0 (để trống nếu muốn tính ĐTBCN từ HK1+HK2)">
+        </div>
+        <button class="btn btn-primary" id="calcNamBtn"><i class="fas fa-calculator"></i> Tính</button>
+        <div id="result_nam" class="result-box"></div>
+      </div>
+    </div>
+
+    <!-- Lịch sử -->
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header"><i class="fas fa-history"></i> Lịch sử tính toán</div>
+      <div class="flex-row" style="justify-content: space-between; margin-bottom: 16px;">
+        <button class="btn btn-outline" id="saveHistoryBtn"><i class="fas fa-save"></i> Lưu kết quả hiện tại</button>
+        <button class="btn btn-danger" id="clearHistoryBtn"><i class="fas fa-trash-alt"></i> Xóa tất cả</button>
+      </div>
+      <div id="historyList"></div>
+    </div>
+
+    <footer>
+      <i class="fas fa-cog"></i> Nhập điểm có thể dùng dấu phẩy hoặc chấm. Tự động làm tròn 0.25→0.3, 0.75→0.8
+    </footer>
   </div>
 
   <script>
-    const muc_tieu = [6.5, 8.0, 9.0]; // Mục tiêu cố định
-    let dtb_hk2_can_arr = [];
-
-    // Hàm hiển thị lỗi
-    function showError(elementId, message) {
-      document.getElementById(elementId).innerHTML = message;
-    }
-
-    // Hàm xóa lỗi
-    function clearError(elementId) {
-      document.getElementById(elementId).innerHTML = "";
-    }
-
-    // Hàm lưu lịch sử
-    function luuLichSu() {
-      const dtb_hk1 = document.getElementById("dtb_hk1").value;
-      const ketqua_hk2 = document.getElementById("ketqua_hk2").innerHTML;
-      const ketqua_ck = document.getElementById("ketqua_ck").innerHTML;
-      if (!ketqua_hk2) {
-        showError("error_hk1", "Vui lòng tính điểm HK2 trước khi lưu.");
-        setTimeout(() => clearError("error_hk1"), 3000);
-        return;
+    (function() {
+      // ----- HÀM TIỆN ÍCH LÀM TRÒN ĐIỂM -----
+      function formatScore(value) {
+        // Làm tròn theo quy tắc: nếu phần thập phân .25 → .3, .75 → .8
+        let num = parseFloat(value);
+        if (isNaN(num)) return '';
+        // Lấy phần thập phân 2 chữ số để kiểm tra .25 và .75
+        let rounded = Math.round(num * 100) / 100;
+        let decimal = rounded - Math.floor(rounded);
+        // Chuyển về 2 chữ số thập phân để so sánh
+        let dec2 = Math.round(decimal * 100);
+        if (dec2 === 25) {
+          rounded = Math.floor(rounded) + 0.3;
+        } else if (dec2 === 75) {
+          rounded = Math.floor(rounded) + 0.8;
+        } else {
+          // Làm tròn 1 chữ số thập phân thông thường
+          rounded = Math.round(rounded * 10) / 10;
+        }
+        return rounded;
       }
-      let lichSu = JSON.parse(localStorage.getItem("lichSuTinhToan") || "[]");
-      lichSu.push({
-        title: "Điểm",
-        dtb_hk1,
-        ketqua_hk2,
-        ketqua_ck: ketqua_ck || "Chưa tính điểm cuối kỳ",
-        timestamp: new Date().toLocaleString("vi-VN")
-      });
-      localStorage.setItem("lichSuTinhToan", JSON.stringify(lichSu));
-      hienThiLichSu();
-    }
 
-    // Hàm hiển thị lịch sử
-    function hienThiLichSu() {
-      const lichSu = JSON.parse(localStorage.getItem("lichSuTinhToan") || "[]");
-      let output = "<ul>";
-      lichSu.forEach((item, index) => {
-        output += `
-          <li>
-            <div class="history-title">
-              <span id="title_${index}">${item.title}</span>
-              <input id="input_${index}" value="${item.title}" type="text">
-              <button class="edit" onclick="toggleEditTitle(${index})"><i class="fas fa-pencil-alt"></i></button>
-              <button class="delete" onclick="xoaMotMuc(${index})">Xóa</button>
+      // Xử lý input: thay dấu phẩy thành chấm, trim, và format nếu là số
+      function parseAndFormatInput(value) {
+        if (!value) return '';
+        let str = value.toString().replace(/,/g, '.').trim();
+        // Tách nếu có nhiều số (cách nhau khoảng trắng)
+        let parts = str.split(/\s+/);
+        let formatted = parts.map(p => {
+          let num = parseFloat(p);
+          if (isNaN(num)) return p; // giữ nguyên nếu không phải số (ít khi)
+          return formatScore(num).toString();
+        }).join(' ');
+        return formatted;
+      }
+
+      // Hàm chuẩn hóa input ngay khi người dùng nhập (sự kiện input)
+      function setupAutoFormat(inputElement) {
+        inputElement.addEventListener('input', function(e) {
+          let cursorPos = e.target.selectionStart;
+          let oldVal = e.target.value;
+          let newVal = parseAndFormatInput(oldVal);
+          if (newVal !== oldVal) {
+            e.target.value = newVal;
+            // Đặt lại vị trí cursor (có thể mất, nhưng tạm chấp nhận)
+          }
+        });
+      }
+
+      // Áp dụng cho tất cả input quan trọng
+      document.querySelectorAll('input[type="text"]').forEach(input => {
+        setupAutoFormat(input);
+      });
+
+      // ----- HÀM TÍNH TOÁN CHUNG -----
+      function parseNumberArray(str) {
+        if (!str.trim()) return [];
+        return str.trim().split(/\s+/).map(s => {
+          let num = parseFloat(s.replace(/,/g, '.'));
+          return isNaN(num) ? null : num;
+        }).filter(v => v !== null);
+      }
+
+      function parseOneNumber(str) {
+        if (!str.trim()) return NaN;
+        return parseFloat(str.trim().replace(/,/g, '.'));
+      }
+
+      // ----- TAB CHUYỂN ĐỔI -----
+      const tabs = document.querySelectorAll('.tab-btn');
+      const contents = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          contents.forEach(c => c.classList.remove('active'));
+          document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+      });
+
+      // ----- MODE 1: TÍNH ĐIỂM HK2 CẦN -----
+      document.getElementById('calcHK2Btn').addEventListener('click', function() {
+        let hk1 = parseOneNumber(document.getElementById('hk1_input').value);
+        if (isNaN(hk1) || hk1 < 0 || hk1 > 10) {
+          showResult('result_hk2', '❌ Điểm HK1 không hợp lệ (0-10)', 'error');
+          return;
+        }
+        let targets = parseNumberArray(document.getElementById('targets_input').value);
+        if (targets.length === 0) {
+          showResult('result_hk2', '❌ Vui lòng nhập ít nhất một mục tiêu', 'error');
+          return;
+        }
+        let html = '<ul>';
+        targets.forEach(t => {
+          if (t < 0 || t > 10) return;
+          let hk2Can = (3 * t - hk1) / 2;
+          hk2Can = formatScore(hk2Can);
+          html += `<li>🎯 ĐTBCN ≥ ${t} → cần HK2 ≥ <strong>${hk2Can}</strong></li>`;
+        });
+        html += '</ul>';
+        showResult('result_hk2', html);
+      });
+
+      // ----- MODE 2: TÍNH ĐIỂM CUỐI KỲ CẦN -----
+      document.getElementById('calcCKBtn').addEventListener('click', function() {
+        let txArr = parseNumberArray(document.getElementById('tx_input').value);
+        let gk = parseOneNumber(document.getElementById('gk_input').value);
+        let targets = parseNumberArray(document.getElementById('target_hk2_input').value);
+        if (txArr.length === 0) {
+          showResult('result_ck', '❌ Cần ít nhất một điểm thường xuyên', 'error');
+          return;
+        }
+        if (isNaN(gk) || gk < 0 || gk > 10) {
+          showResult('result_ck', '❌ Điểm giữa kỳ không hợp lệ', 'error');
+          return;
+        }
+        if (targets.length === 0) {
+          showResult('result_ck', '❌ Nhập mục tiêu điểm TB HK2', 'error');
+          return;
+        }
+        let sumTx = txArr.reduce((a,b) => a + b, 0);
+        let soLuongTx = txArr.length;
+        let html = '<ul>';
+        targets.forEach(t => {
+          if (t < 0 || t > 10) return;
+          // Công thức: ĐTBHK2 = (sumTx + 2*gk + 3*ck) / (soLuongTx + 5)
+          let tongCan = t * (soLuongTx + 5);
+          let ckCan = (tongCan - (sumTx + 2*gk)) / 3;
+          ckCan = formatScore(ckCan);
+          html += `<li>🎯 ĐTBHK2 ≥ ${t} → cần cuối kỳ ≥ <strong>${ckCan}</strong></li>`;
+        });
+        html += '</ul>';
+        showResult('result_ck', html);
+      });
+
+      // ----- MODE 3: TÍNH ĐIỂM TB MÔN -----
+      document.getElementById('calcTBMBtn').addEventListener('click', function() {
+        let txArr = parseNumberArray(document.getElementById('tx_tbm').value);
+        let gk = parseOneNumber(document.getElementById('gk_tbm').value);
+        let ck = parseOneNumber(document.getElementById('ck_tbm').value);
+        if (txArr.length === 0 || isNaN(gk) || isNaN(ck)) {
+          showResult('result_tbm', '❌ Vui lòng nhập đầy đủ điểm', 'error');
+          return;
+        }
+        let sumTx = txArr.reduce((a,b) => a + b, 0);
+        let soLuongTx = txArr.length;
+        let dtb = (sumTx + 2*gk + 3*ck) / (soLuongTx + 5);
+        dtb = formatScore(dtb);
+        showResult('result_tbm', `<div style="font-size:18px; font-weight:bold;">📊 Điểm TB môn: ${dtb}</div>`);
+      });
+
+      // ----- MODE 4: CẢ NĂM -----
+      document.getElementById('calcNamBtn').addEventListener('click', function() {
+        let hk1 = parseOneNumber(document.getElementById('hk1_canam').value);
+        let hk2 = parseOneNumber(document.getElementById('hk2_canam').value);
+        let target = parseOneNumber(document.getElementById('target_canam').value);
+        
+        if (isNaN(hk1) || hk1 < 0 || hk1 > 10) {
+          showResult('result_nam', '❌ HK1 không hợp lệ', 'error');
+          return;
+        }
+
+        // Nếu có target và không có hk2 -> tính hk2 cần
+        if (!isNaN(target) && isNaN(hk2)) {
+          if (target < 0 || target > 10) {
+            showResult('result_nam', '❌ Mục tiêu không hợp lệ', 'error');
+            return;
+          }
+          let hk2Can = (3*target - hk1) / 2;
+          hk2Can = formatScore(hk2Can);
+          showResult('result_nam', `<div>🎯 Để ĐTBCN ≥ ${target} → cần HK2 <strong>${hk2Can}</strong></div>`);
+        } 
+        // Nếu có cả hk1 và hk2 -> tính ĐTBCN
+        else if (!isNaN(hk1) && !isNaN(hk2)) {
+          if (hk2 < 0 || hk2 > 10) {
+            showResult('result_nam', '❌ HK2 không hợp lệ', 'error');
+            return;
+          }
+          let dtbcn = (hk1 + 2*hk2) / 3;
+          dtbcn = formatScore(dtbcn);
+          showResult('result_nam', `<div>📊 Điểm TB cả năm: <strong>${dtbcn}</strong></div>`);
+        } 
+        else {
+          showResult('result_nam', '❌ Vui lòng nhập HK1 và HK2 (hoặc HK1 + mục tiêu)', 'error');
+        }
+      });
+
+      // Helper hiển thị kết quả
+      function showResult(elementId, content, type = 'normal') {
+        let el = document.getElementById(elementId);
+        if (type === 'error') {
+          el.innerHTML = `<div style="color:#b91c1c;">${content}</div>`;
+        } else {
+          el.innerHTML = content;
+        }
+      }
+
+      // ----- LỊCH SỬ (đơn giản, lưu localstorage) -----
+      let history = JSON.parse(localStorage.getItem('gradeHistory')) || [];
+
+      function renderHistory() {
+        let container = document.getElementById('historyList');
+        if (history.length === 0) {
+          container.innerHTML = '<div style="text-align:center; color:#94a3b8;">Chưa có lịch sử</div>';
+          return;
+        }
+        let html = '';
+        history.slice().reverse().forEach((item, idx) => {
+          html += `
+            <div class="history-item">
+              <div class="history-header">
+                <div class="history-title">
+                  <span>${item.mode || 'Tính điểm'}</span>
+                  <span class="history-time">${item.time}</span>
+                </div>
+                <div class="history-actions">
+                  <button onclick="deleteHistoryItem(${history.length - 1 - idx})"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+              <div>${item.content}</div>
             </div>
-            Thời gian: ${item.timestamp}<br>Điểm HK1: ${item.dtb_hk1 || "Chưa nhập"}<br>${item.ketqua_hk2}<br>${item.ketqua_ck}
-          </li>`;
+          `;
+        });
+        container.innerHTML = html;
+      }
+
+      window.deleteHistoryItem = function(index) {
+        history.splice(index, 1);
+        localStorage.setItem('gradeHistory', JSON.stringify(history));
+        renderHistory();
+      };
+
+      document.getElementById('saveHistoryBtn').addEventListener('click', function() {
+        // Xác định tab đang active và lấy kết quả tương ứng
+        let activeTab = document.querySelector('.tab-btn.active');
+        if (!activeTab) return;
+        let tabId = activeTab.dataset.tab;
+        let modeName = activeTab.innerText.trim();
+        let resultContent = '';
+        if (tabId === 'tab1') resultContent = document.getElementById('result_hk2').innerHTML;
+        else if (tabId === 'tab2') resultContent = document.getElementById('result_ck').innerHTML;
+        else if (tabId === 'tab3') resultContent = document.getElementById('result_tbm').innerHTML;
+        else if (tabId === 'tab4') resultContent = document.getElementById('result_nam').innerHTML;
+
+        if (!resultContent || resultContent.includes('❌') || resultContent === '') {
+          alert('Không có kết quả hợp lệ để lưu!');
+          return;
+        }
+
+        let now = new Date().toLocaleString('vi-VN');
+        history.push({
+          mode: modeName,
+          time: now,
+          content: resultContent
+        });
+        localStorage.setItem('gradeHistory', JSON.stringify(history));
+        renderHistory();
       });
-      output += "</ul>";
-      document.getElementById("lich_su").innerHTML = output;
-    }
 
-    // Hàm chỉnh sửa tiêu đề
-    function toggleEditTitle(index) {
-      const titleSpan = document.getElementById(`title_${index}`);
-      const titleInput = document.getElementById(`input_${index}`);
-      if (titleInput.style.display === "none" || !titleInput.style.display) {
-        titleSpan.style.display = "none";
-        titleInput.style.display = "inline-block";
-        titleInput.focus();
-        titleInput.onblur = () => saveTitle(index);
-        titleInput.onkeypress = (e) => {
-          if (e.key === "Enter") saveTitle(index);
-        };
-      }
-    }
-
-    // Hàm lưu tiêu đề sau khi chỉnh sửa
-    function saveTitle(index) {
-      const titleInput = document.getElementById(`input_${index}`);
-      const titleSpan = document.getElementById(`title_${index}`);
-      let lichSu = JSON.parse(localStorage.getItem("lichSuTinhToan") || "[]");
-      const newTitle = titleInput.value.trim() || "Điểm";
-      lichSu[index].title = newTitle;
-      localStorage.setItem("lichSuTinhToan", JSON.stringify(lichSu));
-      titleSpan.textContent = newTitle;
-      titleSpan.style.display = "inline";
-      titleInput.style.display = "none";
-    }
-
-    // Hàm xóa một mục lịch sử
-    function xoaMotMuc(index) {
-      let lichSu = JSON.parse(localStorage.getItem("lichSuTinhToan") || "[]");
-      lichSu.splice(index, 1);
-      localStorage.setItem("lichSuTinhToan", JSON.stringify(lichSu));
-      hienThiLichSu();
-    }
-
-    // Hàm xóa toàn bộ lịch sử
-    function xoaLichSu() {
-      localStorage.removeItem("lichSuTinhToan");
-      hienThiLichSu();
-    }
-
-    // Hàm tính điểm HK2 cần đạt
-    function tinhDTBNam() {
-      const dtb_hk1 = parseFloat(document.getElementById("dtb_hk1").value);
-
-      if (isNaN(dtb_hk1) || dtb_hk1 < 0 || dtb_hk1 > 10) {
-        showError("error_hk1", "Vui lòng nhập điểm HK1 hợp lệ (từ 0 đến 10).");
-        document.getElementById("ketqua_hk2").innerHTML = "";
-        dtb_hk2_can_arr = [];
-        return;
-      }
-      clearError("error_hk1");
-
-      dtb_hk2_can_arr = [];
-      let output = "<ul>";
-      muc_tieu.forEach(muc => {
-        let dtb_hk2_can = ((muc * 3) - dtb_hk1) / 2;
-        dtb_hk2_can = Math.round(dtb_hk2_can * 10) / 10;
-        dtb_hk2_can_arr.push(dtb_hk2_can);
-        output += `<li>Để ĐTBCN ≥ <strong>${muc}</strong>, cần ĐTBHK2 ≥ <strong>${dtb_hk2_can}</strong></li>`;
+      document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+        if (confirm('Xóa toàn bộ lịch sử?')) {
+          history = [];
+          localStorage.removeItem('gradeHistory');
+          renderHistory();
+        }
       });
-      output += "</ul>";
-      document.getElementById("ketqua_hk2").innerHTML = output;
-    }
 
-    // Hàm tính điểm cuối kỳ 2 cần đạt
-    function tinhDiemCuoiKy() {
-      if (dtb_hk2_can_arr.length === 0) {
-        showError("error_tx", "Bạn cần tính điểm trung bình HK2 cần thiết trước.");
-        document.getElementById("ketqua_ck").innerHTML = "";
-        return;
-      }
-      clearError("error_tx");
+      // Khởi tạo
+      renderHistory();
 
-      const diem_tx_str = document.getElementById("diem_tx").value.trim();
-      const diem_gk = parseFloat(document.getElementById("diem_gk").value);
-
-      if (!diem_tx_str) {
-        showError("error_tx", "Vui lòng nhập ít nhất một điểm thường xuyên.");
-        document.getElementById("ketqua_ck").innerHTML = "";
-        return;
-      }
-      clearError("error_tx");
-
-      const diem_tx = diem_tx_str.split(" ").map(Number);
-      if (diem_tx.some(isNaN) || diem_tx.some(d => d < 0 || d > 10)) {
-        showError("error_tx", "Tất cả điểm thường xuyên phải là số từ 0 đến 10.");
-        document.getElementById("ketqua_ck").innerHTML = "";
-        return;
-      }
-      clearError("error_tx");
-
-      if (isNaN(diem_gk) || diem_gk < 0 || diem_gk > 10) {
-        showError("error_gk", "Vui lòng nhập điểm giữa kỳ hợp lệ (0-10).");
-        document.getElementById("ketqua_ck").innerHTML = "";
-        return;
-      }
-      clearError("error_gk");
-
-      const tong_tx = diem_tx.reduce((a, b) => a + b, 0);
-      const so_luong_tx = diem_tx.length;
-
-      let output = "<ul>";
-      muc_tieu.forEach((muc, i) => {
-        const tong_can = dtb_hk2_can_arr[i] * (so_luong_tx + 5);
-        const diem_ck_can = (tong_can - (tong_tx + 2 * diem_gk)) / 3;
-        const diem_ck_can_rounded = Math.round(diem_ck_can * 10) / 10;
-        output += `<li>Để ĐTBCN ≥ <strong>${muc}</strong>, cần điểm cuối kỳ ≥ <strong>${diem_ck_can_rounded}</strong></li>`; // Đổi "Để ĐTBHK2..." thành "Để ĐTBCN..."
-      });
-      output += "</ul>";
-      document.getElementById("ketqua_ck").innerHTML = output;
-    }
-
-    // Thêm sự kiện input cho phản hồi thời gian thực
-    document.getElementById("dtb_hk1").addEventListener("input", () => {
-      tinhDTBNam();
-      tinhDiemCuoiKy();
-    });
-    document.getElementById("diem_tx").addEventListener("input", tinhDiemCuoiKy);
-    document.getElementById("diem_gk").addEventListener("input", tinhDiemCuoiKy);
-
-    // Hiển thị lịch sử khi tải trang
-    hienThiLichSu();
+      // Prefill một số input để demo
+      document.getElementById('hk1_input').value = '7.5';
+      document.getElementById('targets_input').value = '6.5 8.0 9.0';
+      document.getElementById('tx_input').value = '8 7 9';
+      document.getElementById('gk_input').value = '8.0';
+      document.getElementById('target_hk2_input').value = '6.5 8.0 9.0';
+      document.getElementById('tx_tbm').value = '8 7 9';
+      document.getElementById('gk_tbm').value = '8';
+      document.getElementById('ck_tbm').value = '7.5';
+      document.getElementById('hk1_canam').value = '7.5';
+      document.getElementById('hk2_canam').value = '';
+      document.getElementById('target_canam').value = '8.0';
+    })();
   </script>
+  <style>
+    /* Ẩn tab content mặc định */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
 </body>
 </html>

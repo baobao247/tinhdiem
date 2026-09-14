@@ -1,791 +1,1281 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Công cụ tính điểm thông minh - nhiều chế độ, giao diện hiện đại, tự động làm tròn theo quy tắc">
-  <title>Smart Grade Calculator</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Công cụ tính điểm thông minh - đa dụng, real-time, tự động làm tròn">
+<title>Smart Grade Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    body {
-      font-family: 'Inter', 'Segoe UI', sans-serif;
-      background: linear-gradient(145deg, #f0f4fa 0%, #e6ecf5 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+:root{
+  --bg:#f4f6fb;--surface:#ffffff;--surface-2:#f8fafc;
+  --text:#0f172a;--text-muted:#64748b;
+  --border:#e2e8f0;--border-2:#cbd5e1;
+  --primary:#6366f1;--primary-2:#8b5cf6;
+  --primary-soft:rgba(99,102,241,.12);
+  --primary-grad:linear-gradient(135deg,#6366f1,#8b5cf6);
+  --success:#10b981;--success-soft:rgba(16,185,129,.12);
+  --warning:#f59e0b;--warning-soft:rgba(245,158,11,.12);
+  --danger:#ef4444;--danger-soft:rgba(239,68,68,.12);
+  --shadow:0 4px 24px -8px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 40px -15px rgba(15,23,42,.2);
+  --tr:all .22s cubic-bezier(.4,0,.2,1);
+}
 
-    .app-wrapper {
-      max-width: 800px;
-      width: 100%;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 32px;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-      padding: 24px;
-      border: 1px solid rgba(255,255,255,0.5);
-    }
+body.dark{
+  --bg:#0b1120;--surface:#1a2338;--surface-2:#0f172a;
+  --text:#f1f5f9;--text-muted:#94a3b8;
+  --border:#2d3a52;--border-2:#475569;
+  --primary-soft:rgba(99,102,241,.2);
+  --success-soft:rgba(16,185,129,.2);
+  --warning-soft:rgba(245,158,11,.2);
+  --danger-soft:rgba(239,68,68,.2);
+  --shadow:0 4px 24px -8px rgba(0,0,0,.4);
+  --shadow-lg:0 20px 40px -15px rgba(0,0,0,.6);
+}
 
-    h1 {
-      font-size: 28px;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;padding:24px 16px 60px;line-height:1.5;
+  transition:background .3s,color .3s;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(99,102,241,.18),transparent 42%),
+    radial-gradient(circle at 85% 70%,rgba(139,92,246,.14),transparent 45%);
+  animation:bgMove 25s ease-in-out infinite alternate;
+}
+body.dark::before{opacity:.6}
+@keyframes bgMove{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(2%,-2%) scale(1.05)}
+}
 
-    h1 i {
-      color: #3b82f6;
-      font-size: 32px;
-    }
+.app{max-width:960px;margin:0 auto}
 
-    .sub {
-      color: #475569;
-      margin-bottom: 24px;
-      font-size: 14px;
-      border-left: 4px solid #3b82f6;
-      padding-left: 12px;
-    }
+/* ===== HEADER ===== */
+.app-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-logo{
+  width:52px;height:52px;border-radius:16px;
+  background:var(--primary-grad);color:#fff;
+  display:grid;place-items:center;font-size:22px;
+  box-shadow:0 10px 24px -8px rgba(99,102,241,.5);
+  position:relative;overflow:hidden;
+}
+.brand-logo::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);
+  animation:shine 4s linear infinite;
+}
+@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.brand h1{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
+.brand p{font-size:.78rem;color:var(--text-muted);font-weight:500}
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 24px;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 8px;
-    }
+.header-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
-    .tab-btn {
-      padding: 10px 18px;
-      border: none;
-      background: transparent;
-      border-radius: 40px;
-      font-weight: 500;
-      color: #64748b;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 15px;
-    }
+.theme-toggle{
+  width:60px;height:32px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--border);
+  cursor:pointer;position:relative;transition:var(--tr);
+}
+.theme-toggle .thumb{
+  position:absolute;top:2px;left:2px;width:26px;height:26px;
+  border-radius:50%;background:var(--primary-grad);
+  display:grid;place-items:center;color:#fff;font-size:12px;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 4px 10px -2px rgba(99,102,241,.5);
+}
+body.dark .theme-toggle .thumb{transform:translateX(28px)}
 
-    .tab-btn i {
-      font-size: 16px;
-    }
+.scale-switch{
+  display:flex;background:var(--surface);border:1px solid var(--border);
+  border-radius:999px;padding:3px;gap:2px;
+}
+.scale-switch button{
+  padding:7px 16px;border:none;background:transparent;color:var(--text-muted);
+  font-family:inherit;font-weight:600;font-size:.82rem;
+  cursor:pointer;border-radius:999px;transition:var(--tr);
+}
+.scale-switch button.active{
+  background:var(--primary-grad);color:#fff;
+  box-shadow:0 4px 10px -2px rgba(99,102,241,.4);
+}
 
-    .tab-btn:hover {
-      background: #dbeafe;
-      color: #2563eb;
-    }
+/* ===== TABS ===== */
+.tabs{
+  display:flex;gap:6px;margin-bottom:20px;
+  overflow-x:auto;padding-bottom:4px;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:10px 18px;border:1px solid var(--border);
+  background:var(--surface);border-radius:999px;
+  font-family:inherit;font-weight:600;font-size:.86rem;
+  color:var(--text-muted);cursor:pointer;transition:var(--tr);
+  display:inline-flex;align-items:center;gap:8px;
+  white-space:nowrap;flex-shrink:0;
+}
+.tab-btn:hover{color:var(--primary);border-color:var(--primary)}
+.tab-btn.active{
+  background:var(--primary-grad);color:#fff;border-color:transparent;
+  box-shadow:0 8px 20px -8px rgba(99,102,241,.6);
+}
+.tab-btn i{font-size:.9rem}
 
-    .tab-btn.active {
-      background: #2563eb;
-      color: white;
-      box-shadow: 0 10px 15px -3px #2563eb80;
-    }
+/* ===== PANEL ===== */
+.panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:24px;padding:24px;box-shadow:var(--shadow);
+  animation:fadeIn .35s ease;
+}
+.panel[hidden]{display:none!important}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-    /* Cards */
-    .card {
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-      margin-bottom: 24px;
-    }
+.panel-title{
+  display:flex;align-items:center;gap:10px;
+  font-size:1.05rem;font-weight:700;margin-bottom:6px;
+}
+.panel-title i{color:var(--primary)}
+.panel-hint{font-size:.84rem;color:var(--text-muted);margin-bottom:20px}
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      font-weight: 600;
-      color: #0f172a;
-      font-size: 18px;
-    }
+/* ===== FORM ===== */
+.field{margin-bottom:16px}
+.field label{
+  display:flex;align-items:center;gap:8px;
+  font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px;
+}
+.field label i{color:var(--primary);font-size:.9rem;width:16px}
+.field .hint{
+  font-size:.72rem;color:var(--text-muted);
+  margin-left:auto;font-weight:500;
+}
+.input{
+  width:100%;padding:12px 16px;
+  border:1.5px solid var(--border);border-radius:14px;
+  background:var(--surface-2);color:var(--text);
+  font-family:'JetBrains Mono','Inter',monospace;
+  font-size:.95rem;font-weight:500;
+  transition:var(--tr);outline:none;
+}
+.input:focus{
+  border-color:var(--primary);background:var(--surface);
+  box-shadow:0 0 0 4px var(--primary-soft);
+}
+.input.error{
+  border-color:var(--danger);
+  box-shadow:0 0 0 4px var(--danger-soft);
+}
 
-    .card-header i {
-      color: #3b82f6;
-      background: #dbeafe;
-      padding: 8px;
-      border-radius: 50%;
-    }
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.preset{
+  padding:5px 12px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text-muted);
+  font-family:inherit;font-weight:600;font-size:.76rem;
+  border-radius:999px;cursor:pointer;transition:var(--tr);
+}
+.preset:hover{
+  color:var(--primary);border-color:var(--primary);
+  background:var(--primary-soft);
+}
 
-    .input-group {
-      margin-bottom: 16px;
-    }
+/* ===== RESULT ===== */
+.result{
+  margin-top:20px;padding:18px;border-radius:18px;
+  background:var(--surface-2);border:1px solid var(--border);
+  min-height:60px;
+}
+.result.empty{
+  color:var(--text-muted);text-align:center;font-size:.9rem;
+  display:grid;place-items:center;font-style:italic;
+}
+.result.error{
+  background:var(--danger-soft);border-color:rgba(239,68,68,.3);
+  color:var(--danger);font-weight:500;font-size:.9rem;
+  font-style:normal;
+}
+.result-title{
+  font-size:.76rem;font-weight:700;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;
+}
 
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      color: #334155;
-      margin-bottom: 6px;
-    }
+.res-row{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;padding:12px 14px;background:var(--surface);
+  border-radius:14px;margin-bottom:8px;
+  border-left:4px solid var(--primary);
+  animation:fadeIn .3s ease;
+}
+.res-row:last-child{margin-bottom:0}
+.res-row.success{border-left-color:var(--success)}
+.res-row.warning{border-left-color:var(--warning)}
+.res-row.danger{border-left-color:var(--danger)}
+.res-row .label{font-size:.88rem;font-weight:500;color:var(--text)}
+.res-row .value{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.1rem;font-weight:700;color:var(--primary);
+  padding:4px 12px;border-radius:10px;background:var(--primary-soft);
+}
+.res-row.success .value{background:var(--success-soft);color:var(--success)}
+.res-row.warning .value{background:var(--warning-soft);color:var(--warning)}
+.res-row.danger .value{background:var(--danger-soft);color:var(--danger)}
 
-    label i {
-      margin-right: 6px;
-      color: #3b82f6;
-      width: 18px;
-    }
+.res-meta{
+  font-size:.78rem;color:var(--text-muted);
+  margin-top:12px;padding-top:12px;
+  border-top:1px dashed var(--border);
+  line-height:1.6;
+}
+.res-meta strong{color:var(--primary);font-family:'JetBrains Mono',monospace}
 
-    input, textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      font-size: 16px;
-      transition: 0.2s;
-      background: #f8fafc;
-    }
+.big-value{
+  display:flex;align-items:baseline;justify-content:center;gap:10px;
+  padding:20px;background:linear-gradient(135deg,var(--primary-soft),transparent);
+  border-radius:18px;margin-bottom:12px;
+}
+.big-value .num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:3rem;font-weight:800;line-height:1;
+  background:var(--primary-grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.big-value .unit{font-size:.9rem;color:var(--text-muted);font-weight:600}
 
-    input:focus, textarea:focus {
-      border-color: #3b82f6;
-      outline: none;
-      background: white;
-      box-shadow: 0 0 0 3px #3b82f620;
-    }
+/* ===== GPA SUBJECTS ===== */
+.subjects{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.subject-row{
+  display:grid;grid-template-columns:1fr 100px 70px 40px;
+  gap:8px;align-items:center;
+  animation:fadeIn .3s ease;
+}
+.subject-row .input{padding:10px 14px;font-size:.88rem}
+.icon-btn-sm{
+  width:36px;height:36px;border-radius:10px;border:none;
+  background:var(--danger-soft);color:var(--danger);
+  cursor:pointer;display:grid;place-items:center;font-size:13px;
+  transition:var(--tr);
+}
+.icon-btn-sm:hover{background:var(--danger);color:#fff;transform:scale(1.05)}
 
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 20px 0;
-    }
+.add-btn{
+  width:100%;padding:12px;
+  border:1.5px dashed var(--border-2);background:transparent;
+  color:var(--text-muted);border-radius:14px;
+  font-family:inherit;font-weight:600;font-size:.86rem;
+  cursor:pointer;transition:var(--tr);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.add-btn:hover{
+  border-color:var(--primary);color:var(--primary);
+  background:var(--primary-soft);border-style:solid;
+}
 
-    .btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 15px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: 0.2s;
-      background: white;
-      color: #1e293b;
-      border: 1px solid #cbd5e1;
-    }
+/* ===== HISTORY ===== */
+.history-section{
+  margin-top:24px;background:var(--surface);
+  border:1px solid var(--border);border-radius:24px;
+  padding:24px;box-shadow:var(--shadow);
+}
+.history-head{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-wrap:wrap;margin-bottom:16px;
+}
+.history-head h2{
+  font-size:1.05rem;font-weight:700;
+  display:flex;align-items:center;gap:10px;
+}
+.history-head h2 i{color:var(--primary)}
+.history-head .search{
+  flex:1;min-width:180px;max-width:300px;position:relative;
+}
+.history-head .search i{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--text-muted);font-size:13px;pointer-events:none;
+}
+.history-head .search input{
+  width:100%;padding:9px 14px 9px 38px;
+  border:1.5px solid var(--border);border-radius:999px;
+  background:var(--surface-2);color:var(--text);
+  font-family:inherit;font-size:.85rem;outline:none;transition:var(--tr);
+}
+.history-head .search input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px var(--primary-soft);
+}
 
-    .btn-primary {
-      background: #2563eb;
-      color: white;
-      border: none;
-      box-shadow: 0 4px 6px -1px #2563eb80;
-    }
+.history-list{
+  display:flex;flex-direction:column;gap:10px;
+  max-height:400px;overflow-y:auto;
+}
+.history-list::-webkit-scrollbar{width:6px}
+.history-list::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
 
-    .btn-primary:hover {
-      background: #1d4ed8;
-      transform: translateY(-2px);
-    }
+.history-item{
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:14px;padding:14px 16px;
+  transition:var(--tr);animation:fadeIn .3s ease;
+}
+.history-item:hover{
+  border-color:var(--border-2);box-shadow:var(--shadow);
+  transform:translateY(-1px);
+}
+.history-item .top{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;margin-bottom:8px;
+}
+.history-item .mode{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:3px 10px;border-radius:999px;
+  background:var(--primary-soft);color:var(--primary);
+  font-size:.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.history-item .time{font-size:.72rem;color:var(--text-muted);font-weight:500}
+.history-item .content{font-size:.86rem;color:var(--text);line-height:1.6}
+.history-item .content strong{font-family:'JetBrains Mono',monospace;color:var(--primary)}
+.history-item .actions{display:flex;gap:4px}
+.history-item .actions button{
+  width:28px;height:28px;border-radius:8px;border:none;
+  background:transparent;color:var(--text-muted);
+  cursor:pointer;display:grid;place-items:center;
+  font-size:12px;transition:var(--tr);
+}
+.history-item .actions button:hover{background:var(--primary-soft);color:var(--primary)}
+.history-item .actions button.del:hover{background:var(--danger-soft);color:var(--danger)}
 
-    .btn-danger {
-      background: #ef4444;
-      color: white;
-      border: none;
-    }
+.empty-history{
+  text-align:center;padding:40px 20px;color:var(--text-muted);
+}
+.empty-history i{
+  font-size:36px;opacity:.3;margin-bottom:12px;display:block;
+}
 
-    .btn-danger:hover {
-      background: #dc2626;
-    }
+/* ===== BUTTONS ===== */
+.btn{
+  padding:10px 18px;border:1.5px solid var(--border);
+  border-radius:12px;background:var(--surface);color:var(--text);
+  font-family:inherit;font-weight:600;font-size:.85rem;
+  cursor:pointer;transition:var(--tr);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-1px)}
+.btn-primary{
+  background:var(--primary-grad);color:#fff;border-color:transparent;
+  box-shadow:0 6px 16px -6px rgba(99,102,241,.5);
+}
+.btn-primary:hover{color:#fff;box-shadow:0 10px 20px -6px rgba(99,102,241,.7)}
+.btn-danger{color:var(--danger);border-color:rgba(239,68,68,.3)}
+.btn-danger:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
 
-    .btn-outline {
-      border: 1px solid #cbd5e1;
-      background: white;
-    }
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--text);color:var(--surface);
+  padding:12px 22px;border-radius:999px;
+  font-size:.85rem;font-weight:600;
+  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
+  transition:all .3s;z-index:1000;max-width:90vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--danger);color:#fff}
 
-    .btn-outline:hover {
-      background: #f1f5f9;
-    }
-
-    .result-box {
-      background: #f0f9ff;
-      border-radius: 20px;
-      padding: 20px;
-      margin-top: 20px;
-      border-left: 6px solid #2563eb;
-    }
-
-    .result-box ul {
-      list-style: none;
-    }
-
-    .result-box li {
-      padding: 10px 0;
-      border-bottom: 1px dashed #b0d4ff;
-      font-weight: 500;
-    }
-
-    .result-box li:last-child {
-      border: none;
-    }
-
-    .history-item {
-      background: #f8fafc;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
-      border: 1px solid #e2e8f0;
-      transition: 0.2s;
-    }
-
-    .history-item:hover {
-      border-color: #3b82f6;
-      box-shadow: 0 4px 8px #3b82f620;
-    }
-
-    .history-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .history-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .history-title span {
-      font-weight: 600;
-      background: #dbeafe;
-      padding: 4px 12px;
-      border-radius: 40px;
-      font-size: 13px;
-      color: #1e40af;
-    }
-
-    .history-time {
-      font-size: 12px;
-      color: #64748b;
-    }
-
-    .history-actions button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #64748b;
-      font-size: 14px;
-      margin-left: 8px;
-    }
-
-    .history-actions button:hover {
-      color: #0f172a;
-    }
-
-    .flex-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .target-badge {
-      background: #2563eb10;
-      border-radius: 40px;
-      padding: 6px 14px;
-      font-size: 14px;
-      border: 1px dashed #2563eb;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .error-message {
-      color: #dc2626;
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 24px;
-      color: #64748b;
-      font-size: 13px;
-    }
-
-    /* Scale toggle */
-    .scale-toggle {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #f1f5f9;
-      padding: 6px 12px;
-      border-radius: 40px;
-      margin-left: auto;
-    }
-
-    .scale-toggle span {
-      font-weight: 500;
-      color: #334155;
-    }
-
-    .scale-toggle button {
-      background: white;
-      border: 1px solid #cbd5e1;
-      border-radius: 30px;
-      padding: 6px 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-      min-width: 100px;
-    }
-
-    .scale-toggle button:hover {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
-    }
-
-    /* Ẩn tab content mặc định */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-  </style>
+/* ===== RESPONSIVE ===== */
+@media (max-width:640px){
+  body{padding:16px 12px 40px}
+  .panel,.history-section{padding:18px;border-radius:20px}
+  .brand h1{font-size:1.15rem}
+  .brand p{font-size:.72rem}
+  .brand-logo{width:44px;height:44px;font-size:18px;border-radius:13px}
+  .tab-btn{padding:8px 14px;font-size:.8rem}
+  .tab-btn i{display:none}
+  .big-value .num{font-size:2.4rem}
+  .res-row{flex-wrap:wrap;padding:10px 12px}
+  .res-row .label{font-size:.82rem}
+  .res-row .value{font-size:.95rem;padding:3px 10px}
+  .subject-row{grid-template-columns:1fr 80px 40px}
+  .subject-row .subj-weight{display:none}
+  .history-head{align-items:stretch}
+  .history-head .search{max-width:none}
+  .scale-switch button{padding:6px 12px;font-size:.75rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
 </head>
 <body>
-  <div class="app-wrapper">
-    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-      <h1><i class="fas fa-calculator"></i> Smart Grade Calculator</h1>
-      <div class="scale-toggle">
-        <span>Thang điểm</span>
-        <button id="scaleToggleBtn">10 (thập phân)</button>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-logo"><i class="fas fa-graduation-cap"></i></div>
+      <div>
+        <h1>Smart Grade Calculator</h1>
+        <p>Tính điểm thông minh · Tự động làm tròn</p>
       </div>
     </div>
-    <div class="sub">Tính điểm thông minh · Tự động làm tròn theo thang điểm</div>
-
-    <!-- Tabs -->
-    <div class="tabs" id="tabContainer">
-      <button class="tab-btn active" data-tab="tab1"><i class="fas fa-chart-line"></i> HK2 cần</button>
-      <button class="tab-btn" data-tab="tab2"><i class="fas fa-file-signature"></i> Cuối kỳ cần</button>
-      <button class="tab-btn" data-tab="tab3"><i class="fas fa-layer-group"></i> Điểm TB môn</button>
-      <button class="tab-btn" data-tab="tab4"><i class="fas fa-calendar-alt"></i> Cả năm</button>
+    <div class="header-actions">
+      <div class="scale-switch" id="scaleSwitch">
+        <button data-scale="10" class="active">Thang 10</button>
+        <button data-scale="100">Thang 100</button>
+      </div>
+      <button class="theme-toggle" id="themeToggle" title="Đổi chế độ sáng / tối">
+        <div class="thumb"><i class="fas fa-sun" id="themeIcon"></i></div>
+      </button>
     </div>
+  </header>
 
-    <!-- Tab 1: Tính điểm HK2 cần -->
-    <div id="tab1" class="tab-content active">
-      <div class="card">
-        <div class="card-header"><i class="fas fa-bullseye"></i> Điểm HK2 cần để đạt mục tiêu cả năm</div>
-        <div class="input-group">
-          <label><i class="fas fa-school"></i> Điểm TB HK1 (0-<span class="scale-limit">10</span>)</label>
-          <input type="text" id="hk1_input" placeholder="VD: 7.5 hoặc 7,5" value="7.5">
+  <!-- TABS -->
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-panel="panel-hk2"><i class="fas fa-bullseye"></i> HK2 cần</button>
+    <button class="tab-btn" data-panel="panel-ck"><i class="fas fa-flag-checkered"></i> Cuối kỳ cần</button>
+    <button class="tab-btn" data-panel="panel-tb"><i class="fas fa-chart-simple"></i> Điểm TB môn</button>
+    <button class="tab-btn" data-panel="panel-nam"><i class="fas fa-calendar-days"></i> Cả năm</button>
+    <button class="tab-btn" data-panel="panel-gpa"><i class="fas fa-layer-group"></i> GPA nhiều môn</button>
+  </nav>
+
+  <main>
+    <!-- PANEL 1 -->
+    <section class="panel" id="panel-hk2">
+      <div class="panel-title"><i class="fas fa-bullseye"></i> Điểm HK2 cần để đạt mục tiêu cả năm</div>
+      <p class="panel-hint">Công thức: ĐTBCN = (HK1 + 2×HK2) / 3 → HK2 cần = (3×Mục tiêu − HK1) / 2</p>
+
+      <div class="field">
+        <label><i class="fas fa-school"></i> Điểm TB HK1 <span class="hint">0 → <span class="scale-max">10</span></span></label>
+        <input type="text" class="input" id="hk1" placeholder="VD: 7.5" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label><i class="fas fa-bullseye"></i> Mục tiêu ĐTBCN <span class="hint">cách nhau dấu cách</span></label>
+        <input type="text" class="input" id="targets-hk2" placeholder="VD: 6.5 8.0 9.0" autocomplete="off">
+        <div class="presets" data-for="targets-hk2">
+          <button class="preset" data-target="6.5">+ 6.5</button>
+          <button class="preset" data-target="7.0">+ 7.0</button>
+          <button class="preset" data-target="7.5">+ 7.5</button>
+          <button class="preset" data-target="8.0">+ 8.0</button>
+          <button class="preset" data-target="8.5">+ 8.5</button>
+          <button class="preset" data-target="9.0">+ 9.0</button>
         </div>
-        <div class="input-group">
-          <label><i class="fas fa-bullseye"></i> Mục tiêu ĐTBCN (cách nhau bằng dấu cách)</label>
-          <input type="text" id="targets_input" value="6.5 8.0 9.0" placeholder="VD: 6.5 8.0 9.0">
+      </div>
+
+      <div class="result empty" id="result-hk2">Nhập điểm để xem kết quả</div>
+    </section>
+
+    <!-- PANEL 2 -->
+    <section class="panel" id="panel-ck" hidden>
+      <div class="panel-title"><i class="fas fa-flag-checkered"></i> Điểm cuối kỳ cần để đạt ĐTB HK2</div>
+      <p class="panel-hint">Công thức: ĐTBHK2 = (ΣTX + 2×GK + 3×CK) / (n + 5)</p>
+
+      <div class="field">
+        <label><i class="fas fa-list"></i> Điểm thường xuyên <span class="hint">cách nhau dấu cách</span></label>
+        <input type="text" class="input" id="tx-ck" placeholder="VD: 8 7 9" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label><i class="fas fa-clock"></i> Điểm giữa kỳ</label>
+        <input type="text" class="input" id="gk-ck" placeholder="VD: 8.0" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label><i class="fas fa-bullseye"></i> Mục tiêu ĐTB HK2 <span class="hint">cách nhau dấu cách</span></label>
+        <input type="text" class="input" id="targets-ck" placeholder="VD: 7.0 8.0" autocomplete="off">
+        <div class="presets" data-for="targets-ck">
+          <button class="preset" data-target="6.5">+ 6.5</button>
+          <button class="preset" data-target="7.0">+ 7.0</button>
+          <button class="preset" data-target="7.5">+ 7.5</button>
+          <button class="preset" data-target="8.0">+ 8.0</button>
+          <button class="preset" data-target="8.5">+ 8.5</button>
+          <button class="preset" data-target="9.0">+ 9.0</button>
         </div>
-        <button class="btn btn-primary" id="calcHK2Btn"><i class="fas fa-calculator"></i> Tính điểm HK2 cần</button>
-        <div id="result_hk2" class="result-box"></div>
+      </div>
+
+      <div class="result empty" id="result-ck">Nhập điểm để xem kết quả</div>
+    </section>
+
+    <!-- PANEL 3 -->
+    <section class="panel" id="panel-tb" hidden>
+      <div class="panel-title"><i class="fas fa-chart-simple"></i> Tính điểm trung bình môn</div>
+      <p class="panel-hint">Công thức: ĐTB = (ΣTX + 2×GK + 3×CK) / (n + 5)</p>
+
+      <div class="field">
+        <label><i class="fas fa-list"></i> Điểm thường xuyên</label>
+        <input type="text" class="input" id="tx-tb" placeholder="VD: 8 7.5 9" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label><i class="fas fa-clock"></i> Điểm giữa kỳ</label>
+        <input type="text" class="input" id="gk-tb" placeholder="VD: 8.0" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label><i class="fas fa-star"></i> Điểm cuối kỳ</label>
+        <input type="text" class="input" id="ck-tb" placeholder="VD: 7.5" autocomplete="off">
+      </div>
+
+      <div class="result empty" id="result-tb">Nhập điểm để xem kết quả</div>
+    </section>
+
+    <!-- PANEL 4 -->
+    <section class="panel" id="panel-nam" hidden>
+      <div class="panel-title"><i class="fas fa-calendar-days"></i> Điểm cả năm</div>
+      <p class="panel-hint">Nhập HK1 + HK2 để tính ĐTBCN, hoặc HK1 + mục tiêu để tính HK2 cần</p>
+
+      <div class="field">
+        <label><i class="fas fa-school"></i> Điểm TB HK1</label>
+        <input type="text" class="input" id="hk1-nam" placeholder="VD: 7.0" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label><i class="fas fa-school"></i> Điểm TB HK2 <span class="hint">để trống nếu muốn tính HK2 cần</span></label>
+        <input type="text" class="input" id="hk2-nam" placeholder="VD: 8.0" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label><i class="fas fa-bullseye"></i> Mục tiêu ĐTBCN <span class="hint">để trống nếu muốn tính ĐTBCN</span></label>
+        <input type="text" class="input" id="target-nam" placeholder="VD: 8.0" autocomplete="off">
+      </div>
+
+      <div class="result empty" id="result-nam">Nhập dữ liệu để xem kết quả</div>
+    </section>
+
+    <!-- PANEL 5: GPA -->
+    <section class="panel" id="panel-gpa" hidden>
+      <div class="panel-title"><i class="fas fa-layer-group"></i> GPA nhiều môn</div>
+      <p class="panel-hint">Nhập điểm TB từng môn. Cột HS là hệ số tín chỉ (mặc định 1)</p>
+
+      <div class="subjects" id="gpa-subjects"></div>
+
+      <button class="add-btn" id="gpa-add">
+        <i class="fas fa-plus"></i> Thêm môn học
+      </button>
+
+      <div class="result empty" id="result-gpa" style="margin-top:20px">Thêm môn để tính GPA</div>
+    </section>
+  </main>
+
+  <!-- HISTORY -->
+  <section class="history-section">
+    <div class="history-head">
+      <h2><i class="fas fa-clock-rotate-left"></i> Lịch sử</h2>
+      <div class="search">
+        <i class="fas fa-search"></i>
+        <input type="text" id="history-search" placeholder="Tìm kiếm trong lịch sử...">
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="copy-result-btn" title="Sao chép kết quả hiện tại">
+          <i class="fas fa-copy"></i>
+        </button>
+        <button class="btn btn-primary" id="save-history-btn">
+          <i class="fas fa-bookmark"></i> Lưu kết quả
+        </button>
+        <button class="btn btn-danger" id="clear-history-btn" title="Xóa tất cả lịch sử">
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
     </div>
+    <div class="history-list" id="history-list"></div>
+  </section>
 
-    <!-- Tab 2: Tính điểm cuối kỳ cần -->
-    <div id="tab2" class="tab-content">
-      <div class="card">
-        <div class="card-header"><i class="fas fa-star"></i> Điểm cuối kỳ cần để đạt ĐTBHK2 mong muốn</div>
-        <div class="input-group">
-          <label><i class="fas fa-list"></i> Điểm thường xuyên (cách nhau dấu cách)</label>
-          <input type="text" id="tx_input" placeholder="VD: 8 7 9">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ========== STATE ========== */
+const LS = { history:'sgc_v2_history', dark:'sgc_v2_dark', gpa:'sgc_v2_gpa', scale:'sgc_v2_scale' };
+const state = {
+  scale: parseInt(localStorage.getItem(LS.scale)) || 10,
+  darkMode: localStorage.getItem(LS.dark) === '1',
+  history: safeJSON(localStorage.getItem(LS.history), []),
+  gpaSubjects: safeJSON(localStorage.getItem(LS.gpa), []),
+  searchTerm: ''
+};
+
+const PANEL_RESULT = {
+  'panel-hk2':'result-hk2',
+  'panel-ck':'result-ck',
+  'panel-tb':'result-tb',
+  'panel-nam':'result-nam',
+  'panel-gpa':'result-gpa'
+};
+
+/* ========== UTILS ========== */
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+
+function safeJSON(s, fallback){ try{ return s ? JSON.parse(s) : fallback; }catch(e){ return fallback; } }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function roundScore(n){
+  if (!isFinite(n)) return n;
+  if (state.scale === 100) return Math.round(n);
+  return Math.round((n + 1e-9) * 10) / 10;
+}
+function fmt(n){
+  if (!isFinite(n)) return '—';
+  if (state.scale === 100) return Math.round(n).toString();
+  return roundScore(n).toFixed(1);
+}
+function parseOne(str){
+  if (!str || !str.trim()) return NaN;
+  return parseFloat(str.trim().replace(',', '.'));
+}
+function parseNumbers(str){
+  if (!str || !str.trim()) return [];
+  return str.trim().split(/\s+/).map(s => {
+    const n = parseFloat(s.replace(',', '.'));
+    return isNaN(n) ? null : n;
+  }).filter(n => n !== null);
+}
+function isValidScore(n){ return !isNaN(n) && n >= 0 && n <= state.scale; }
+
+function toast(msg, type){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'error' ? ' error' : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function showEmpty(el, msg){
+  el.className = 'result empty';
+  el.textContent = msg;
+}
+function showError(el, msg){
+  el.className = 'result error';
+  el.innerHTML = '<i class="fas fa-triangle-exclamation"></i> ' + escapeHtml(msg);
+}
+
+function classify(needed){
+  if (needed <= 0) return 'success';
+  if (needed <= state.scale * 0.6) return 'success';
+  if (needed <= state.scale * 0.85) return 'warning';
+  if (needed <= state.scale) return 'warning';
+  return 'danger';
+}
+
+/* ========== THEME ========== */
+function applyTheme(){
+  document.body.classList.toggle('dark', state.darkMode);
+  $('themeIcon').className = state.darkMode ? 'fas fa-moon' : 'fas fa-sun';
+}
+$('themeToggle').addEventListener('click', () => {
+  state.darkMode = !state.darkMode;
+  localStorage.setItem(LS.dark, state.darkMode ? '1' : '0');
+  applyTheme();
+});
+
+/* ========== SCALE ========== */
+function applyScale(){
+  $$('.scale-switch button').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.scale) === state.scale);
+  });
+  $$('.scale-max').forEach(el => el.textContent = state.scale);
+}
+$$('.scale-switch button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sc = parseInt(btn.dataset.scale);
+    if (sc === state.scale) return;
+    state.scale = sc;
+    localStorage.setItem(LS.scale, sc);
+    applyScale();
+    computeAll();
+  });
+});
+
+/* ========== TABS ========== */
+$$('.tab-btn').forEach(tab => {
+  tab.addEventListener('click', () => {
+    $$('.tab-btn').forEach(t => t.classList.toggle('active', t === tab));
+    $$('.panel').forEach(p => p.hidden = p.id !== tab.dataset.panel);
+  });
+});
+
+/* ========== PRESETS ========== */
+$$('.preset').forEach(p => {
+  p.addEventListener('click', () => {
+    const input = $(p.closest('.presets').dataset.for);
+    const val = p.dataset.target;
+    const parts = input.value.trim().split(/\s+/).filter(Boolean);
+    if (!parts.includes(val)){
+      parts.push(val);
+      input.value = parts.join(' ');
+      computeAll();
+    } else {
+      toast('Mục tiêu đã có trong danh sách');
+    }
+  });
+});
+
+/* ========== PANEL 1: HK2 cần ========== */
+function calcHK2(){
+  const hk1El = $('hk1');
+  const hk1 = parseOne(hk1El.value);
+  const result = $('result-hk2');
+
+  if (!hk1El.value.trim()){
+    showEmpty(result, 'Nhập điểm HK1 để bắt đầu');
+    hk1El.classList.remove('error');
+    return;
+  }
+  if (!isValidScore(hk1)){
+    showError(result, `HK1 phải từ 0 đến ${state.scale}`);
+    hk1El.classList.add('error');
+    return;
+  }
+  hk1El.classList.remove('error');
+
+  const targets = parseNumbers($('targets-hk2').value).filter(t => isValidScore(t));
+  if (!targets.length){
+    showEmpty(result, 'Nhập ít nhất 1 mục tiêu');
+    return;
+  }
+
+  let html = '<div class="result-title">Kết quả</div>';
+  targets.forEach(t => {
+    const needed = (3 * t - hk1) / 2;
+    const cls = classify(needed);
+    if (needed > state.scale){
+      const maxCN = (hk1 + 2 * state.scale) / 3;
+      html += `
+        <div class="res-row danger">
+          <span class="label">ĐTBCN ≥ ${fmt(t)}</span>
+          <span class="value"><i class="fas fa-xmark"></i> Không khả thi</span>
         </div>
-        <div class="input-group">
-          <label><i class="fas fa-clock"></i> Điểm giữa kỳ</label>
-          <input type="text" id="gk_input" placeholder="VD: 8.0">
+        <div class="res-meta">HK2 tối đa <strong>${state.scale}</strong> → ĐTBCN tối đa = <strong>${fmt(maxCN)}</strong> (thiếu <strong>${fmt(t - maxCN)}</strong>)</div>
+      `;
+    } else {
+      const clamped = Math.max(0, needed);
+      html += `
+        <div class="res-row ${cls}">
+          <span class="label">ĐTBCN ≥ ${fmt(t)}</span>
+          <span class="value">${fmt(clamped)}</span>
         </div>
-        <div class="input-group">
-          <label><i class="fas fa-bullseye"></i> Điểm TB HK2 mục tiêu (cách nhau dấu cách)</label>
-          <input type="text" id="target_hk2_input" placeholder="VD: 6.5 8.0 9.0">
+      `;
+    }
+  });
+  html += `<div class="res-meta">Công thức: HK2 = (3 × Mục tiêu − HK1) / 2</div>`;
+  result.className = 'result';
+  result.innerHTML = html;
+}
+
+/* ========== PANEL 2: Cuối kỳ cần ========== */
+function calcCK(){
+  const txEl = $('tx-ck'), gkEl = $('gk-ck');
+  const result = $('result-ck');
+  const txArr = parseNumbers(txEl.value);
+  const gk = parseOne(gkEl.value);
+
+  if (!txEl.value.trim() || !gkEl.value.trim()){
+    showEmpty(result, 'Nhập điểm TX và giữa kỳ');
+    return;
+  }
+  const badTx = txArr.find(v => !isValidScore(v));
+  if (badTx !== undefined){
+    showError(result, `Điểm TX phải từ 0 đến ${state.scale}`);
+    return;
+  }
+  if (!isValidScore(gk)){
+    showError(result, `Điểm giữa kỳ phải từ 0 đến ${state.scale}`);
+    return;
+  }
+
+  const targets = parseNumbers($('targets-ck').value).filter(t => isValidScore(t));
+  if (!targets.length){
+    showEmpty(result, 'Nhập ít nhất 1 mục tiêu ĐTB HK2');
+    return;
+  }
+
+  const sumTx = txArr.reduce((a,b) => a+b, 0);
+  const n = txArr.length;
+
+  let html = '<div class="result-title">Kết quả</div>';
+  targets.forEach(t => {
+    const needed = (t * (n + 5) - sumTx - 2 * gk) / 3;
+    const cls = classify(needed);
+    if (needed > state.scale){
+      const maxCK = state.scale;
+      const maxDTB = (sumTx + 2 * gk + 3 * maxCK) / (n + 5);
+      html += `
+        <div class="res-row danger">
+          <span class="label">ĐTBHK2 ≥ ${fmt(t)}</span>
+          <span class="value"><i class="fas fa-xmark"></i> Không khả thi</span>
         </div>
-        <button class="btn btn-primary" id="calcCKBtn"><i class="fas fa-calculator"></i> Tính điểm cuối kỳ cần</button>
-        <div id="result_ck" class="result-box"></div>
-      </div>
+        <div class="res-meta">Nếu CK = ${state.scale}, ĐTBHK2 tối đa = <strong>${fmt(maxDTB)}</strong> (thiếu <strong>${fmt(t - maxDTB)}</strong>)</div>
+      `;
+    } else {
+      const clamped = Math.max(0, needed);
+      html += `
+        <div class="res-row ${cls}">
+          <span class="label">ĐTBHK2 ≥ ${fmt(t)}</span>
+          <span class="value">${fmt(clamped)}</span>
+        </div>
+      `;
+    }
+  });
+  html += `<div class="res-meta">Công thức: CK = (ĐTB × (n+5) − ΣTX − 2×GK) / 3 · n = ${n}</div>`;
+  result.className = 'result';
+  result.innerHTML = html;
+}
+
+/* ========== PANEL 3: Điểm TB môn ========== */
+function calcTB(){
+  const txArr = parseNumbers($('tx-tb').value);
+  const gk = parseOne($('gk-tb').value);
+  const ck = parseOne($('ck-tb').value);
+  const result = $('result-tb');
+
+  if (!txArr.length && isNaN(gk) && isNaN(ck)){
+    showEmpty(result, 'Nhập điểm để tính ĐTB môn');
+    return;
+  }
+  if (!txArr.length){
+    showError(result, 'Cần nhập ít nhất 1 điểm thường xuyên');
+    return;
+  }
+  if (txArr.some(v => !isValidScore(v))){
+    showError(result, `Điểm TX phải từ 0 đến ${state.scale}`);
+    return;
+  }
+  if (isNaN(gk) || isNaN(ck)){
+    showError(result, 'Cần nhập đủ giữa kỳ và cuối kỳ');
+    return;
+  }
+  if (!isValidScore(gk) || !isValidScore(ck)){
+    showError(result, `Điểm phải từ 0 đến ${state.scale}`);
+    return;
+  }
+
+  const sumTx = txArr.reduce((a,b) => a+b, 0);
+  const n = txArr.length;
+  const dtb = (sumTx + 2*gk + 3*ck) / (n + 5);
+
+  let rank = '';
+  if (state.scale === 10){
+    if (dtb >= 8) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
+    else if (dtb >= 6.5) rank = '👍 Xếp loại <strong>Khá</strong>';
+    else if (dtb >= 5) rank = '📚 Xếp loại <strong>Trung bình</strong>';
+    else if (dtb >= 3.5) rank = '📖 Xếp loại <strong>Yếu</strong>';
+    else rank = '⚠️ Xếp loại <strong>Kém</strong>';
+  } else {
+    if (dtb >= 80) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
+    else if (dtb >= 65) rank = '👍 Xếp loại <strong>Khá</strong>';
+    else if (dtb >= 50) rank = '📚 Xếp loại <strong>Trung bình</strong>';
+    else if (dtb >= 35) rank = '📖 Xếp loại <strong>Yếu</strong>';
+    else rank = '⚠️ Xếp loại <strong>Kém</strong>';
+  }
+
+  const html = `
+    <div class="big-value">
+      <span class="num">${fmt(dtb)}</span>
+      <span class="unit">/ ${state.scale}</span>
     </div>
-
-    <!-- Tab 3: Tính điểm TB môn -->
-    <div id="tab3" class="tab-content">
-      <div class="card">
-        <div class="card-header"><i class="fas fa-chart-pie"></i> Tính điểm trung bình môn</div>
-        <div class="input-group">
-          <label><i class="fas fa-list"></i> Điểm thường xuyên (hệ số 1) - cách nhau dấu cách</label>
-          <input type="text" id="tx_tbm" placeholder="VD: 8 7.5 9">
-        </div>
-        <div class="input-group">
-          <label><i class="fas fa-clock"></i> Điểm giữa kỳ (hệ số 2)</label>
-          <input type="text" id="gk_tbm" placeholder="VD: 8.0">
-        </div>
-        <div class="input-group">
-          <label><i class="fas fa-star"></i> Điểm cuối kỳ (hệ số 3)</label>
-          <input type="text" id="ck_tbm" placeholder="VD: 7.5">
-        </div>
-        <button class="btn btn-primary" id="calcTBMBtn"><i class="fas fa-calculator"></i> Tính điểm TB môn</button>
-        <div id="result_tbm" class="result-box"></div>
-      </div>
+    <div class="res-row">
+      <span class="label">ΣTX (${n} điểm)</span>
+      <span class="value">${fmt(sumTx)}</span>
     </div>
-
-    <!-- Tab 4: Tính điểm cả năm -->
-    <div id="tab4" class="tab-content">
-      <div class="card">
-        <div class="card-header"><i class="fas fa-calendar-check"></i> Cả năm: tính HK2 cần hoặc điểm cả năm</div>
-        <div class="flex-row">
-          <div style="flex:1">
-            <label><i class="fas fa-school"></i> Điểm HK1</label>
-            <input type="text" id="hk1_canam" placeholder="VD: 7.0">
-          </div>
-          <div style="flex:1">
-            <label><i class="fas fa-school"></i> Điểm HK2</label>
-            <input type="text" id="hk2_canam" placeholder="Điểm HK2 (nếu có)">
-          </div>
-        </div>
-        <div class="input-group">
-          <label><i class="fas fa-bullseye"></i> Mục tiêu ĐTBCN (nếu muốn tính HK2 cần)</label>
-          <input type="text" id="target_canam" placeholder="VD: 8.0 (để trống nếu muốn tính ĐTBCN từ HK1+HK2)">
-        </div>
-        <button class="btn btn-primary" id="calcNamBtn"><i class="fas fa-calculator"></i> Tính</button>
-        <div id="result_nam" class="result-box"></div>
-      </div>
+    <div class="res-row">
+      <span class="label">Giữa kỳ (×2)</span>
+      <span class="value">${fmt(gk)}</span>
     </div>
-
-    <!-- Lịch sử -->
-    <div class="card" style="margin-top: 20px;">
-      <div class="card-header"><i class="fas fa-history"></i> Lịch sử tính toán</div>
-      <div class="flex-row" style="justify-content: space-between; margin-bottom: 16px;">
-        <button class="btn btn-outline" id="saveHistoryBtn"><i class="fas fa-save"></i> Lưu kết quả hiện tại</button>
-        <button class="btn btn-danger" id="clearHistoryBtn"><i class="fas fa-trash-alt"></i> Xóa tất cả</button>
-      </div>
-      <div id="historyList"></div>
+    <div class="res-row">
+      <span class="label">Cuối kỳ (×3)</span>
+      <span class="value">${fmt(ck)}</span>
     </div>
+    <div class="res-meta">
+      Công thức: (ΣTX + 2×GK + 3×CK) / (n + 5) = (${fmt(sumTx)} + ${fmt(2*gk)} + ${fmt(3*ck)}) / ${n+5}<br>
+      ${rank}
+    </div>
+  `;
+  result.className = 'result';
+  result.innerHTML = html;
+}
 
-    <footer>
-      <i class="fas fa-cog"></i> Nhập điểm có thể dùng dấu phẩy hoặc chấm. Thang điểm có thể chuyển đổi.
-    </footer>
-  </div>
+/* ========== PANEL 4: Cả năm ========== */
+function calcNam(){
+  const hk1 = parseOne($('hk1-nam').value);
+  const hk2 = parseOne($('hk2-nam').value);
+  const target = parseOne($('target-nam').value);
+  const result = $('result-nam');
 
-  <script>
-    (function() {
-      // Biến thang điểm toàn cục
-      let currentScale = 10; // 10 hoặc 100
+  if (isNaN(hk1)){
+    showEmpty(result, 'Nhập điểm HK1 để bắt đầu');
+    return;
+  }
+  if (!isValidScore(hk1)){
+    showError(result, `HK1 phải từ 0 đến ${state.scale}`);
+    return;
+  }
 
-      // Hàm format theo thang điểm
-      function formatScore(value) {
-        let num = parseFloat(value);
-        if (isNaN(num)) return '';
-        if (currentScale === 10) {
-          // Làm tròn theo quy tắc 0.25 -> 0.3, 0.75 -> 0.8
-          let rounded = Math.round(num * 100) / 100;
-          let decimal = rounded - Math.floor(rounded);
-          let dec2 = Math.round(decimal * 100);
-          if (dec2 === 25) {
-            rounded = Math.floor(rounded) + 0.3;
-          } else if (dec2 === 75) {
-            rounded = Math.floor(rounded) + 0.8;
-          } else {
-            rounded = Math.round(rounded * 10) / 10;
-          }
-          return rounded;
-        } else {
-          // Thang 100: làm tròn đến số nguyên gần nhất
-          return Math.round(num);
-        }
+  // Case 1: chỉ có HK1 + target → tính HK2 cần
+  if (isNaN(hk2) && !isNaN(target)){
+    if (!isValidScore(target)){
+      showError(result, `Mục tiêu phải từ 0 đến ${state.scale}`);
+      return;
+    }
+    const needed = (3 * target - hk1) / 2;
+    const cls = classify(needed);
+    let html = '<div class="result-title">HK2 cần</div>';
+    if (needed > state.scale){
+      const maxCN = (hk1 + 2 * state.scale) / 3;
+      html += `
+        <div class="res-row danger">
+          <span class="label">ĐTBCN ≥ ${fmt(target)}</span>
+          <span class="value"><i class="fas fa-xmark"></i> Không khả thi</span>
+        </div>
+        <div class="res-meta">HK2 tối đa <strong>${state.scale}</strong> → ĐTBCN tối đa = <strong>${fmt(maxCN)}</strong></div>
+      `;
+    } else {
+      html += `
+        <div class="res-row ${cls}">
+          <span class="label">ĐTBCN ≥ ${fmt(target)} → HK2 cần</span>
+          <span class="value">${fmt(Math.max(0, needed))}</span>
+        </div>
+      `;
+    }
+    html += `<div class="res-meta">Công thức: HK2 = (3 × ${fmt(target)} − ${fmt(hk1)}) / 2</div>`;
+    result.className = 'result';
+    result.innerHTML = html;
+    return;
+  }
+
+  // Case 2: có HK1 + HK2 → tính ĐTBCN
+  if (!isNaN(hk2)){
+    if (!isValidScore(hk2)){
+      showError(result, `HK2 phải từ 0 đến ${state.scale}`);
+      return;
+    }
+    const dtbcn = (hk1 + 2 * hk2) / 3;
+    let rank = '';
+    if (state.scale === 10){
+      if (dtbcn >= 8) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
+      else if (dtbcn >= 6.5) rank = '👍 Xếp loại <strong>Khá</strong>';
+      else if (dtbcn >= 5) rank = '📚 Xếp loại <strong>Trung bình</strong>';
+      else rank = '⚠️ Xếp loại dưới trung bình';
+    } else {
+      if (dtbcn >= 80) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
+      else if (dtbcn >= 65) rank = '👍 Xếp loại <strong>Khá</strong>';
+      else if (dtbcn >= 50) rank = '📚 Xếp loại <strong>Trung bình</strong>';
+      else rank = '⚠️ Xếp loại dưới trung bình';
+    }
+    const html = `
+      <div class="big-value">
+        <span class="num">${fmt(dtbcn)}</span>
+        <span class="unit">/ ${state.scale}</span>
+      </div>
+      <div class="res-row">
+        <span class="label">HK1</span>
+        <span class="value">${fmt(hk1)}</span>
+      </div>
+      <div class="res-row">
+        <span class="label">HK2 (×2)</span>
+        <span class="value">${fmt(hk2)}</span>
+      </div>
+      <div class="res-meta">
+        Công thức: (HK1 + 2×HK2) / 3 = (${fmt(hk1)} + ${fmt(2*hk2)}) / 3<br>
+        ${rank}
+      </div>
+    `;
+    result.className = 'result';
+    result.innerHTML = html;
+    return;
+  }
+
+  showEmpty(result, 'Nhập HK2 hoặc mục tiêu để tính tiếp');
+}
+
+/* ========== PANEL 5: GPA ========== */
+function renderSubjects(){
+  const wrap = $('gpa-subjects');
+  if (!state.gpaSubjects.length){
+    wrap.innerHTML = '';
+    return;
+  }
+  wrap.innerHTML = state.gpaSubjects.map((s, i) => `
+    <div class="subject-row" data-idx="${i}">
+      <input type="text" class="input subj-name" placeholder="Tên môn" value="${escapeHtml(s.name || '')}" autocomplete="off">
+      <input type="text" class="input subj-score" placeholder="Điểm" value="${s.score != null ? s.score : ''}" autocomplete="off">
+      <input type="text" class="input subj-weight" placeholder="HS" value="${s.weight || 1}" autocomplete="off">
+      <button class="icon-btn-sm subj-del" title="Xóa môn"><i class="fas fa-times"></i></button>
+    </div>
+  `).join('');
+}
+function syncSubjectsFromDOM(){
+  const rows = $$('#gpa-subjects .subject-row');
+  state.gpaSubjects = Array.from(rows).map(row => ({
+    name: row.querySelector('.subj-name').value.trim(),
+    score: parseOne(row.querySelector('.subj-score').value),
+    weight: parseOne(row.querySelector('.subj-weight').value) || 1
+  }));
+  localStorage.setItem(LS.gpa, JSON.stringify(state.gpaSubjects));
+}
+function calcGPA(){
+  const result = $('result-gpa');
+  const valid = state.gpaSubjects.filter(s => isValidScore(s.score) && s.weight > 0);
+
+  if (!valid.length){
+    showEmpty(result, 'Nhập điểm ít nhất 1 môn để tính GPA');
+    return;
+  }
+
+  let sumScore = 0, sumWeight = 0;
+  valid.forEach(s => { sumScore += s.score * s.weight; sumWeight += s.weight; });
+  const gpa = sumScore / sumWeight;
+
+  let maxSub = valid[0], minSub = valid[0];
+  valid.forEach(s => {
+    if (s.score > maxSub.score) maxSub = s;
+    if (s.score < minSub.score) minSub = s;
+  });
+
+  let rank = '';
+  if (state.scale === 10){
+    if (gpa >= 8) rank = '🎉 GPA đạt loại <strong>Giỏi</strong>';
+    else if (gpa >= 6.5) rank = '👍 GPA đạt loại <strong>Khá</strong>';
+    else if (gpa >= 5) rank = '📚 GPA đạt loại <strong>Trung bình</strong>';
+    else rank = '⚠️ GPA dưới trung bình';
+  } else {
+    if (gpa >= 80) rank = '🎉 GPA đạt loại <strong>Giỏi</strong>';
+    else if (gpa >= 65) rank = '👍 GPA đạt loại <strong>Khá</strong>';
+    else if (gpa >= 50) rank = '📚 GPA đạt loại <strong>Trung bình</strong>';
+    else rank = '⚠️ GPA dưới trung bình';
+  }
+
+  const html = `
+    <div class="big-value">
+      <span class="num">${fmt(gpa)}</span>
+      <span class="unit">/ ${state.scale}</span>
+    </div>
+    <div class="res-row">
+      <span class="label">Số môn tính</span>
+      <span class="value">${valid.length} / ${state.gpaSubjects.length}</span>
+    </div>
+    <div class="res-row success">
+      <span class="label"><i class="fas fa-arrow-up"></i> Cao nhất</span>
+      <span class="value">${fmt(maxSub.score)}</span>
+    </div>
+    <div class="res-row danger">
+      <span class="label"><i class="fas fa-arrow-down"></i> Thấp nhất</span>
+      <span class="value">${fmt(minSub.score)}</span>
+    </div>
+    <div class="res-meta">
+      Tổng hệ số: <strong>${sumWeight}</strong> · ${rank}
+    </div>
+  `;
+  result.className = 'result';
+  result.innerHTML = html;
+}
+
+$('gpa-add').addEventListener('click', () => {
+  state.gpaSubjects.push({ name:'', score: NaN, weight: 1 });
+  syncSubjectsFromDOM();
+  renderSubjects();
+  const rows = $$('#gpa-subjects .subject-row');
+  if (rows.length) rows[rows.length-1].querySelector('.subj-name').focus();
+});
+
+$('gpa-subjects').addEventListener('click', e => {
+  const btn = e.target.closest('.subj-del');
+  if (!btn) return;
+  const row = btn.closest('.subject-row');
+  const idx = parseInt(row.dataset.idx);
+  state.gpaSubjects.splice(idx, 1);
+  localStorage.setItem(LS.gpa, JSON.stringify(state.gpaSubjects));
+  renderSubjects();
+  calcGPA();
+});
+
+$('gpa-subjects').addEventListener('input', () => {
+  syncSubjectsFromDOM();
+  calcGPA();
+});
+
+/* ========== COMPUTE ALL ========== */
+function computeAll(){
+  calcHK2();
+  calcCK();
+  calcTB();
+  calcNam();
+  calcGPA();
+}
+
+/* ========== REAL-TIME INPUT ========== */
+const inputIds = ['hk1','targets-hk2','tx-ck','gk-ck','targets-ck','tx-tb','gk-tb','ck-tb','hk1-nam','hk2-nam','target-nam'];
+inputIds.forEach(id => {
+  const el = $(id);
+  if (el) el.addEventListener('input', computeAll);
+});
+
+/* ========== HISTORY ========== */
+function saveHistoryToStorage(){
+  localStorage.setItem(LS.history, JSON.stringify(state.history));
+}
+
+function getCurrentResult(){
+  const activeTab = document.querySelector('.tab-btn.active');
+  if (!activeTab) return null;
+  const resultEl = $(PANEL_RESULT[activeTab.dataset.panel]);
+  if (!resultEl) return null;
+  if (resultEl.classList.contains('empty') || resultEl.classList.contains('error')) return null;
+  return { mode: activeTab.textContent.trim(), html: resultEl.innerHTML };
+}
+
+function renderHistory(){
+  const list = $('history-list');
+  const term = state.searchTerm.toLowerCase().trim();
+  let items = state.history.slice();
+  if (term){
+    items = items.filter(it =>
+      it.mode.toLowerCase().includes(term) ||
+      it.content.toLowerCase().includes(term)
+    );
+  }
+
+  if (!items.length){
+    list.innerHTML = `<div class="empty-history">
+      <i class="fas fa-inbox"></i>
+      <p>${term ? 'Không tìm thấy kết quả phù hợp' : 'Chưa có kết quả nào được lưu'}</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(it => `
+    <div class="history-item" data-id="${it.id}">
+      <div class="top">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="mode">${escapeHtml(it.mode)}</span>
+          <span class="time"><i class="far fa-clock"></i> ${escapeHtml(it.time)}</span>
+        </div>
+        <div class="actions">
+          <button class="restore" title="Khôi phục"><i class="fas fa-rotate-left"></i></button>
+          <button class="del" title="Xóa"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="content">${it.content}</div>
+    </div>
+  `).join('');
+}
+
+$('history-list').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const item = btn.closest('.history-item');
+  const id = item.dataset.id;
+  const idx = state.history.findIndex(h => h.id === id);
+  if (idx === -1) return;
+
+  if (btn.classList.contains('del')){
+    state.history.splice(idx, 1);
+    saveHistoryToStorage();
+    renderHistory();
+    toast('Đã xóa mục lịch sử');
+  }
+  else if (btn.classList.contains('restore')){
+    const it = state.history[idx];
+    const tabBtn = Array.from($$('.tab-btn')).find(b => b.textContent.trim() === it.mode);
+    if (tabBtn){
+      tabBtn.click();
+      const resultEl = $(PANEL_RESULT[tabBtn.dataset.panel]);
+      if (resultEl){
+        resultEl.className = 'result';
+        resultEl.innerHTML = it.html;
       }
+      window.scrollTo({top:0, behavior:'smooth'});
+      toast('Đã khôi phục kết quả');
+    }
+  }
+});
 
-      // Hàm kiểm tra giá trị có vượt quá thang điểm không
-      function isValidScore(value) {
-        let num = parseFloat(value);
-        if (isNaN(num)) return false;
-        return num >= 0 && num <= currentScale;
-      }
+$('save-history-btn').addEventListener('click', () => {
+  const cur = getCurrentResult();
+  if (!cur){
+    toast('Không có kết quả hợp lệ để lưu', 'error');
+    return;
+  }
+  state.history.unshift({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    mode: cur.mode,
+    time: new Date().toLocaleString('vi-VN'),
+    content: cur.html
+  });
+  if (state.history.length > 100) state.history.length = 100;
+  saveHistoryToStorage();
+  renderHistory();
+  toast('Đã lưu vào lịch sử');
+});
 
-      // Hàm xử lý và format một input (thay dấu phẩy, giới hạn, format)
-      function formatInputValue(input) {
-        let raw = input.value;
-        if (!raw.trim()) return;
-        // Thay dấu phẩy bằng chấm
-        let str = raw.replace(/,/g, '.').trim();
-        // Tách các phần (nếu có nhiều số cách nhau bằng khoảng trắng)
-        let parts = str.split(/\s+/);
-        let formattedParts = parts.map(p => {
-          let num = parseFloat(p);
-          if (isNaN(num)) return p; // giữ nguyên nếu không phải số
-          // Giới hạn trong thang điểm
-          if (num > currentScale) num = currentScale;
-          if (num < 0) num = 0;
-          return formatScore(num).toString();
-        });
-        input.value = formattedParts.join(' ');
-      }
+$('clear-history-btn').addEventListener('click', () => {
+  if (!state.history.length) return toast('Lịch sử đã trống');
+  if (confirm('Xóa toàn bộ lịch sử?')){
+    state.history = [];
+    saveHistoryToStorage();
+    renderHistory();
+    toast('Đã xóa toàn bộ lịch sử');
+  }
+});
 
-      // Áp dụng format khi mất focus (blur) cho tất cả input
-      document.querySelectorAll('input[type="text"]').forEach(input => {
-        input.addEventListener('blur', function() {
-          formatInputValue(this);
-        });
-      });
+const searchHistoryDebounced = (() => {
+  let t;
+  return () => { clearTimeout(t); t = setTimeout(renderHistory, 180); };
+})();
+$('history-search').addEventListener('input', e => {
+  state.searchTerm = e.target.value;
+  searchHistoryDebounced();
+});
 
-      // Nút chuyển đổi thang điểm
-      const scaleBtn = document.getElementById('scaleToggleBtn');
-      scaleBtn.addEventListener('click', function() {
-        currentScale = currentScale === 10 ? 100 : 10;
-        scaleBtn.textContent = currentScale === 10 ? '10 (thập phân)' : '100 (nguyên)';
-        // Cập nhật lại tất cả input
-        document.querySelectorAll('input[type="text"]').forEach(input => {
-          formatInputValue(input);
-        });
-        // Cập nhật hiển thị giới hạn
-        document.querySelectorAll('.scale-limit').forEach(el => {
-          el.textContent = currentScale;
-        });
-      });
+/* ========== COPY RESULT ========== */
+$('copy-result-btn').addEventListener('click', () => {
+  const cur = getCurrentResult();
+  if (!cur) return toast('Không có kết quả để sao chép', 'error');
+  // Extract plain text from HTML
+  const tmp = document.createElement('div');
+  tmp.innerHTML = cur.html;
+  const text = `[${cur.mode}]\n` + tmp.innerText.replace(/\n+/g, '\n').trim();
+  navigator.clipboard.writeText(text)
+    .then(() => toast('Đã sao chép kết quả'))
+    .catch(() => toast('Không thể sao chép', 'error'));
+});
 
-      // Hàm parse số từ chuỗi (mảng)
-      function parseNumberArray(str) {
-        if (!str.trim()) return [];
-        return str.trim().split(/\s+/).map(s => {
-          let num = parseFloat(s.replace(/,/g, '.'));
-          return isNaN(num) ? null : num;
-        }).filter(v => v !== null);
-      }
+/* ========== KEYBOARD SHORTCUTS ========== */
+document.addEventListener('keydown', e => {
+  const ctrl = e.ctrlKey || e.metaKey;
+  if (ctrl && e.key.toLowerCase() === 's'){
+    e.preventDefault();
+    $('save-history-btn').click();
+  } else if (ctrl && e.key === '/'){
+    e.preventDefault();
+    $('history-search').focus();
+  }
+});
 
-      function parseOneNumber(str) {
-        if (!str.trim()) return NaN;
-        return parseFloat(str.trim().replace(/,/g, '.'));
-      }
+/* ========== INIT ========== */
+function init(){
+  applyTheme();
+  applyScale();
+  renderSubjects();
+  computeAll();
+  renderHistory();
+}
+init();
 
-      // Hiển thị kết quả
-      function showResult(elementId, content, type = 'normal') {
-        let el = document.getElementById(elementId);
-        if (type === 'error') {
-          el.innerHTML = `<div style="color:#b91c1c;">${content}</div>`;
-        } else {
-          el.innerHTML = content;
-        }
-      }
-
-      // Kiểm tra mảng số có hợp lệ (trong thang điểm) không
-      function validateNumbers(arr, fieldName, resultElementId) {
-        for (let val of arr) {
-          if (val < 0 || val > currentScale) {
-            showResult(resultElementId, `❌ ${fieldName} phải từ 0 đến ${currentScale}`, 'error');
-            return false;
-          }
-        }
-        return true;
-      }
-
-      // ----- TAB CHUYỂN ĐỔI -----
-      const tabs = document.querySelectorAll('.tab-btn');
-      const contents = document.querySelectorAll('.tab-content');
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          contents.forEach(c => c.classList.remove('active'));
-          document.getElementById(tab.dataset.tab).classList.add('active');
-        });
-      });
-
-      // ----- MODE 1: TÍNH ĐIỂM HK2 CẦN -----
-      document.getElementById('calcHK2Btn').addEventListener('click', function() {
-        let hk1 = parseOneNumber(document.getElementById('hk1_input').value);
-        if (isNaN(hk1) || !isValidScore(hk1)) {
-          showResult('result_hk2', `❌ Điểm HK1 không hợp lệ (phải từ 0-${currentScale})`, 'error');
-          return;
-        }
-        let targets = parseNumberArray(document.getElementById('targets_input').value);
-        if (targets.length === 0) {
-          showResult('result_hk2', '❌ Vui lòng nhập ít nhất một mục tiêu', 'error');
-          return;
-        }
-        if (!validateNumbers(targets, 'Mục tiêu', 'result_hk2')) return;
-
-        let html = '<ul>';
-        targets.forEach(t => {
-          let hk2Can = (3 * t - hk1) / 2;
-          hk2Can = formatScore(hk2Can);
-          html += `<li>🎯 ĐTBCN ≥ ${t} → cần HK2 ≥ <strong>${hk2Can}</strong></li>`;
-        });
-        html += '</ul>';
-        showResult('result_hk2', html);
-      });
-
-      // ----- MODE 2: TÍNH ĐIỂM CUỐI KỲ CẦN -----
-      document.getElementById('calcCKBtn').addEventListener('click', function() {
-        let txArr = parseNumberArray(document.getElementById('tx_input').value);
-        let gk = parseOneNumber(document.getElementById('gk_input').value);
-        let targets = parseNumberArray(document.getElementById('target_hk2_input').value);
-
-        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên', 'result_ck')) return;
-        if (isNaN(gk) || !isValidScore(gk)) {
-          showResult('result_ck', `❌ Điểm giữa kỳ không hợp lệ (phải từ 0-${currentScale})`, 'error');
-          return;
-        }
-        if (targets.length === 0) {
-          showResult('result_ck', '❌ Nhập mục tiêu điểm TB HK2', 'error');
-          return;
-        }
-        if (!validateNumbers(targets, 'Mục tiêu', 'result_ck')) return;
-
-        let sumTx = txArr.reduce((a,b) => a + b, 0);
-        let soLuongTx = txArr.length;
-        let html = '<ul>';
-        targets.forEach(t => {
-          let tongCan = t * (soLuongTx + 5);
-          let ckCan = (tongCan - (sumTx + 2*gk)) / 3;
-          ckCan = formatScore(ckCan);
-          html += `<li>🎯 ĐTBHK2 ≥ ${t} → cần cuối kỳ ≥ <strong>${ckCan}</strong></li>`;
-        });
-        html += '</ul>';
-        showResult('result_ck', html);
-      });
-
-      // ----- MODE 3: TÍNH ĐIỂM TB MÔN -----
-      document.getElementById('calcTBMBtn').addEventListener('click', function() {
-        let txArr = parseNumberArray(document.getElementById('tx_tbm').value);
-        let gk = parseOneNumber(document.getElementById('gk_tbm').value);
-        let ck = parseOneNumber(document.getElementById('ck_tbm').value);
-
-        if (txArr.length === 0 || !validateNumbers(txArr, 'Điểm thường xuyên', 'result_tbm')) return;
-        if (isNaN(gk) || !isValidScore(gk) || isNaN(ck) || !isValidScore(ck)) {
-          showResult('result_tbm', `❌ Điểm giữa kỳ/cuối kỳ không hợp lệ (phải từ 0-${currentScale})`, 'error');
-          return;
-        }
-
-        let sumTx = txArr.reduce((a,b) => a + b, 0);
-        let soLuongTx = txArr.length;
-        let dtb = (sumTx + 2*gk + 3*ck) / (soLuongTx + 5);
-        dtb = formatScore(dtb);
-        showResult('result_tbm', `<div style="font-size:18px; font-weight:bold;">📊 Điểm TB môn: ${dtb}</div>`);
-      });
-
-      // ----- MODE 4: CẢ NĂM -----
-      document.getElementById('calcNamBtn').addEventListener('click', function() {
-        let hk1 = parseOneNumber(document.getElementById('hk1_canam').value);
-        let hk2 = parseOneNumber(document.getElementById('hk2_canam').value);
-        let target = parseOneNumber(document.getElementById('target_canam').value);
-
-        if (isNaN(hk1) || !isValidScore(hk1)) {
-          showResult('result_nam', `❌ HK1 không hợp lệ (phải từ 0-${currentScale})`, 'error');
-          return;
-        }
-
-        // Nếu có target và không có hk2 -> tính hk2 cần
-        if (!isNaN(target) && isNaN(hk2)) {
-          if (!isValidScore(target)) {
-            showResult('result_nam', `❌ Mục tiêu không hợp lệ (phải từ 0-${currentScale})`, 'error');
-            return;
-          }
-          let hk2Can = (3*target - hk1) / 2;
-          hk2Can = formatScore(hk2Can);
-          showResult('result_nam', `<div>🎯 Để ĐTBCN ≥ ${target} → cần HK2 <strong>${hk2Can}</strong></div>`);
-        } 
-        // Nếu có cả hk1 và hk2 -> tính ĐTBCN
-        else if (!isNaN(hk1) && !isNaN(hk2)) {
-          if (!isValidScore(hk2)) {
-            showResult('result_nam', `❌ HK2 không hợp lệ (phải từ 0-${currentScale})`, 'error');
-            return;
-          }
-          let dtbcn = (hk1 + 2*hk2) / 3;
-          dtbcn = formatScore(dtbcn);
-          showResult('result_nam', `<div>📊 Điểm TB cả năm: <strong>${dtbcn}</strong></div>`);
-        } 
-        else {
-          showResult('result_nam', '❌ Vui lòng nhập HK1 và HK2 (hoặc HK1 + mục tiêu)', 'error');
-        }
-      });
-
-      // ----- LỊCH SỬ -----
-      let history = JSON.parse(localStorage.getItem('gradeHistory')) || [];
-
-      function renderHistory() {
-        let container = document.getElementById('historyList');
-        if (history.length === 0) {
-          container.innerHTML = '<div style="text-align:center; color:#94a3b8;">Chưa có lịch sử</div>';
-          return;
-        }
-        let html = '';
-        history.slice().reverse().forEach((item, idx) => {
-          html += `
-            <div class="history-item">
-              <div class="history-header">
-                <div class="history-title">
-                  <span>${item.mode || 'Tính điểm'}</span>
-                  <span class="history-time">${item.time}</span>
-                </div>
-                <div class="history-actions">
-                  <button onclick="deleteHistoryItem(${history.length - 1 - idx})"><i class="fas fa-trash"></i></button>
-                </div>
-              </div>
-              <div>${item.content}</div>
-            </div>
-          `;
-        });
-        container.innerHTML = html;
-      }
-
-      window.deleteHistoryItem = function(index) {
-        history.splice(index, 1);
-        localStorage.setItem('gradeHistory', JSON.stringify(history));
-        renderHistory();
-      };
-
-      document.getElementById('saveHistoryBtn').addEventListener('click', function() {
-        let activeTab = document.querySelector('.tab-btn.active');
-        if (!activeTab) return;
-        let tabId = activeTab.dataset.tab;
-        let modeName = activeTab.innerText.trim();
-        let resultContent = '';
-        if (tabId === 'tab1') resultContent = document.getElementById('result_hk2').innerHTML;
-        else if (tabId === 'tab2') resultContent = document.getElementById('result_ck').innerHTML;
-        else if (tabId === 'tab3') resultContent = document.getElementById('result_tbm').innerHTML;
-        else if (tabId === 'tab4') resultContent = document.getElementById('result_nam').innerHTML;
-
-        if (!resultContent || resultContent.includes('❌') || resultContent === '' || resultContent.includes('error')) {
-          alert('Không có kết quả hợp lệ để lưu!');
-          return;
-        }
-
-        let now = new Date().toLocaleString('vi-VN');
-        history.push({
-          mode: modeName,
-          time: now,
-          content: resultContent
-        });
-        localStorage.setItem('gradeHistory', JSON.stringify(history));
-        renderHistory();
-      });
-
-      document.getElementById('clearHistoryBtn').addEventListener('click', function() {
-        if (confirm('Xóa toàn bộ lịch sử?')) {
-          history = [];
-          localStorage.removeItem('gradeHistory');
-          renderHistory();
-        }
-      });
-
-      // Khởi tạo hiển thị thang điểm và format ban đầu
-      document.querySelectorAll('.scale-limit').forEach(el => {
-        el.textContent = currentScale;
-      });
-      // Format các input có sẵn (prefill)
-      document.querySelectorAll('input[type="text"]').forEach(input => {
-        formatInputValue(input);
-      });
-      renderHistory();
-    })();
-  </script>
+})();
+</script>
 </body>
 </html>

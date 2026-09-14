@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Công cụ tính điểm thông minh - đa dụng, real-time, tự động làm tròn">
 <title>Smart Grade Calculator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +10,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
   --bg:#f4f6fb;--surface:#ffffff;--surface-2:#f8fafc;
   --text:#0f172a;--text-muted:#64748b;
@@ -26,7 +24,6 @@
   --shadow-lg:0 20px 40px -15px rgba(15,23,42,.2);
   --tr:all .22s cubic-bezier(.4,0,.2,1);
 }
-
 body.dark{
   --bg:#0b1120;--surface:#1a2338;--surface-2:#0f172a;
   --text:#f1f5f9;--text-muted:#94a3b8;
@@ -38,31 +35,25 @@ body.dark{
   --shadow:0 4px 24px -8px rgba(0,0,0,.4);
   --shadow-lg:0 20px 40px -15px rgba(0,0,0,.6);
 }
-
 html{scroll-behavior:smooth}
 body{
   font-family:'Inter',system-ui,sans-serif;
   background:var(--bg);color:var(--text);
   min-height:100vh;padding:24px 16px 60px;line-height:1.5;
-  transition:background .3s,color .3s;
-  -webkit-font-smoothing:antialiased;
+  transition:background .3s,color .3s;-webkit-font-smoothing:antialiased;
 }
 body::before{
   content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:
-    radial-gradient(circle at 15% 20%,rgba(99,102,241,.18),transparent 42%),
-    radial-gradient(circle at 85% 70%,rgba(139,92,246,.14),transparent 45%);
+  background:radial-gradient(circle at 15% 20%,rgba(99,102,241,.18),transparent 42%),
+             radial-gradient(circle at 85% 70%,rgba(139,92,246,.14),transparent 45%);
   animation:bgMove 25s ease-in-out infinite alternate;
 }
 body.dark::before{opacity:.6}
-@keyframes bgMove{
-  0%{transform:translate(0,0) scale(1)}
-  100%{transform:translate(2%,-2%) scale(1.05)}
-}
+@keyframes bgMove{0%{transform:translate(0,0) scale(1)}100%{transform:translate(2%,-2%) scale(1.05)}}
 
 .app{max-width:960px;margin:0 auto}
 
-/* ===== HEADER ===== */
+/* HEADER */
 .app-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
 .brand{display:flex;align-items:center;gap:14px}
 .brand-logo{
@@ -80,9 +71,7 @@ body.dark::before{opacity:.6}
 @keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .brand h1{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
 .brand p{font-size:.78rem;color:var(--text-muted);font-weight:500}
-
 .header-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-
 .theme-toggle{
   width:60px;height:32px;border-radius:999px;
   background:var(--surface);border:1px solid var(--border);
@@ -96,43 +85,29 @@ body.dark::before{opacity:.6}
   box-shadow:0 4px 10px -2px rgba(99,102,241,.5);
 }
 body.dark .theme-toggle .thumb{transform:translateX(28px)}
-
-.scale-switch{
-  display:flex;background:var(--surface);border:1px solid var(--border);
-  border-radius:999px;padding:3px;gap:2px;
-}
+.scale-switch{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
 .scale-switch button{
   padding:7px 16px;border:none;background:transparent;color:var(--text-muted);
   font-family:inherit;font-weight:600;font-size:.82rem;
   cursor:pointer;border-radius:999px;transition:var(--tr);
 }
-.scale-switch button.active{
-  background:var(--primary-grad);color:#fff;
-  box-shadow:0 4px 10px -2px rgba(99,102,241,.4);
-}
+.scale-switch button.active{background:var(--primary-grad);color:#fff;box-shadow:0 4px 10px -2px rgba(99,102,241,.4)}
 
-/* ===== TABS ===== */
-.tabs{
-  display:flex;gap:6px;margin-bottom:20px;
-  overflow-x:auto;padding-bottom:4px;scrollbar-width:none;
-}
+/* TABS */
+.tabs{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab-btn{
   padding:10px 18px;border:1px solid var(--border);
   background:var(--surface);border-radius:999px;
   font-family:inherit;font-weight:600;font-size:.86rem;
   color:var(--text-muted);cursor:pointer;transition:var(--tr);
-  display:inline-flex;align-items:center;gap:8px;
-  white-space:nowrap;flex-shrink:0;
+  display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;
 }
 .tab-btn:hover{color:var(--primary);border-color:var(--primary)}
-.tab-btn.active{
-  background:var(--primary-grad);color:#fff;border-color:transparent;
-  box-shadow:0 8px 20px -8px rgba(99,102,241,.6);
-}
+.tab-btn.active{background:var(--primary-grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px rgba(99,102,241,.6)}
 .tab-btn i{font-size:.9rem}
 
-/* ===== PANEL ===== */
+/* PANEL */
 .panel{
   background:var(--surface);border:1px solid var(--border);
   border-radius:24px;padding:24px;box-shadow:var(--shadow);
@@ -140,25 +115,16 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
 }
 .panel[hidden]{display:none!important}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-.panel-title{
-  display:flex;align-items:center;gap:10px;
-  font-size:1.05rem;font-weight:700;margin-bottom:6px;
-}
+.panel-title{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:700;margin-bottom:6px}
 .panel-title i{color:var(--primary)}
 .panel-hint{font-size:.84rem;color:var(--text-muted);margin-bottom:20px}
+.panel-hint strong{color:var(--primary)}
 
-/* ===== FORM ===== */
+/* FORM */
 .field{margin-bottom:16px}
-.field label{
-  display:flex;align-items:center;gap:8px;
-  font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px;
-}
+.field label{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px}
 .field label i{color:var(--primary);font-size:.9rem;width:16px}
-.field .hint{
-  font-size:.72rem;color:var(--text-muted);
-  margin-left:auto;font-weight:500;
-}
+.field .hint{font-size:.72rem;color:var(--text-muted);margin-left:auto;font-weight:500}
 .input{
   width:100%;padding:12px 16px;
   border:1.5px solid var(--border);border-radius:14px;
@@ -167,14 +133,8 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
   font-size:.95rem;font-weight:500;
   transition:var(--tr);outline:none;
 }
-.input:focus{
-  border-color:var(--primary);background:var(--surface);
-  box-shadow:0 0 0 4px var(--primary-soft);
-}
-.input.error{
-  border-color:var(--danger);
-  box-shadow:0 0 0 4px var(--danger-soft);
-}
+.input:focus{border-color:var(--primary);background:var(--surface);box-shadow:0 0 0 4px var(--primary-soft)}
+.input.error{border-color:var(--danger);box-shadow:0 0 0 4px var(--danger-soft)}
 
 .presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .preset{
@@ -183,37 +143,21 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
   font-family:inherit;font-weight:600;font-size:.76rem;
   border-radius:999px;cursor:pointer;transition:var(--tr);
 }
-.preset:hover{
-  color:var(--primary);border-color:var(--primary);
-  background:var(--primary-soft);
-}
+.preset:hover{color:var(--primary);border-color:var(--primary);background:var(--primary-soft)}
 
-/* ===== RESULT ===== */
+/* RESULT */
 .result{
   margin-top:20px;padding:18px;border-radius:18px;
   background:var(--surface-2);border:1px solid var(--border);
   min-height:60px;
 }
-.result.empty{
-  color:var(--text-muted);text-align:center;font-size:.9rem;
-  display:grid;place-items:center;font-style:italic;
-}
-.result.error{
-  background:var(--danger-soft);border-color:rgba(239,68,68,.3);
-  color:var(--danger);font-weight:500;font-size:.9rem;
-  font-style:normal;
-}
-.result-title{
-  font-size:.76rem;font-weight:700;color:var(--text-muted);
-  text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;
-}
-
+.result.empty{color:var(--text-muted);text-align:center;font-size:.9rem;display:grid;place-items:center;font-style:italic}
+.result.error{background:var(--danger-soft);border-color:rgba(239,68,68,.3);color:var(--danger);font-weight:500;font-size:.9rem;font-style:normal}
+.result-title{font-size:.76rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
 .res-row{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;padding:12px 14px;background:var(--surface);
-  border-radius:14px;margin-bottom:8px;
-  border-left:4px solid var(--primary);
-  animation:fadeIn .3s ease;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:12px 14px;background:var(--surface);border-radius:14px;margin-bottom:8px;
+  border-left:4px solid var(--primary);animation:fadeIn .3s ease;
 }
 .res-row:last-child{margin-bottom:0}
 .res-row.success{border-left-color:var(--success)}
@@ -221,124 +165,138 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
 .res-row.danger{border-left-color:var(--danger)}
 .res-row .label{font-size:.88rem;font-weight:500;color:var(--text)}
 .res-row .value{
-  font-family:'JetBrains Mono',monospace;
-  font-size:1.1rem;font-weight:700;color:var(--primary);
-  padding:4px 12px;border-radius:10px;background:var(--primary-soft);
+  font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;
+  color:var(--primary);padding:4px 12px;border-radius:10px;background:var(--primary-soft);
 }
 .res-row.success .value{background:var(--success-soft);color:var(--success)}
 .res-row.warning .value{background:var(--warning-soft);color:var(--warning)}
 .res-row.danger .value{background:var(--danger-soft);color:var(--danger)}
-
 .res-meta{
-  font-size:.78rem;color:var(--text-muted);
-  margin-top:12px;padding-top:12px;
-  border-top:1px dashed var(--border);
-  line-height:1.6;
+  font-size:.78rem;color:var(--text-muted);margin-top:12px;padding-top:12px;
+  border-top:1px dashed var(--border);line-height:1.6;
 }
 .res-meta strong{color:var(--primary);font-family:'JetBrains Mono',monospace}
-
 .big-value{
   display:flex;align-items:baseline;justify-content:center;gap:10px;
   padding:20px;background:linear-gradient(135deg,var(--primary-soft),transparent);
   border-radius:18px;margin-bottom:12px;
 }
 .big-value .num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:3rem;font-weight:800;line-height:1;
-  background:var(--primary-grad);
-  -webkit-background-clip:text;background-clip:text;
+  font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:800;line-height:1;
+  background:var(--primary-grad);-webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 .big-value .unit{font-size:.9rem;color:var(--text-muted);font-weight:600}
 
-/* ===== GPA SUBJECTS ===== */
-.subjects{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+/* ===== GPA PANEL ===== */
+.gpa-toolbar{
+  display:flex;flex-wrap:wrap;gap:8px;
+  justify-content:space-between;align-items:center;
+  padding:10px 12px;margin-bottom:16px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:16px;
+}
+.gpa-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1;min-width:0}
+.gpa-sort{
+  width:auto;padding:8px 32px 8px 12px;
+  font-family:inherit;font-size:.8rem;font-weight:600;
+  cursor:pointer;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+  background-size:12px;
+  -webkit-appearance:none;appearance:none;
+}
+
+.subjects{display:flex;flex-direction:column;gap:8px}
+
 .subject-row{
-  display:grid;grid-template-columns:1fr 100px 70px 40px;
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,.7fr) 38px;
   gap:8px;align-items:center;
+  padding:8px 10px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-left:4px solid var(--border);
+  border-radius:14px;
+  transition:var(--tr);
   animation:fadeIn .3s ease;
 }
-.subject-row .input{padding:10px 14px;font-size:.88rem}
+.subject-row:focus-within{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-soft);
+}
+.subject-row.score-great{border-left-color:var(--success)}
+.subject-row.score-good {border-left-color:var(--primary)}
+.subject-row.score-ok   {border-left-color:var(--warning)}
+.subject-row.score-bad  {border-left-color:var(--danger)}
+
+.subject-row .input{
+  padding:9px 12px;font-size:.86rem;
+  background:var(--surface);
+}
+.subject-row .subj-name{font-family:'Inter',sans-serif;font-weight:500}
+.subject-row .subj-score,.subject-row .subj-weight{
+  text-align:center;font-family:'JetBrains Mono',monospace;font-weight:600;
+}
+
 .icon-btn-sm{
-  width:36px;height:36px;border-radius:10px;border:none;
-  background:var(--danger-soft);color:var(--danger);
+  width:34px;height:34px;border-radius:10px;border:none;
+  background:transparent;color:var(--text-muted);
   cursor:pointer;display:grid;place-items:center;font-size:13px;
   transition:var(--tr);
 }
-.icon-btn-sm:hover{background:var(--danger);color:#fff;transform:scale(1.05)}
+.icon-btn-sm:hover{background:var(--danger-soft);color:var(--danger);transform:scale(1.05)}
 
-.add-btn{
-  width:100%;padding:12px;
+.add-row{
+  width:100%;padding:12px;margin-top:10px;
   border:1.5px dashed var(--border-2);background:transparent;
   color:var(--text-muted);border-radius:14px;
   font-family:inherit;font-weight:600;font-size:.86rem;
   cursor:pointer;transition:var(--tr);
   display:flex;align-items:center;justify-content:center;gap:8px;
 }
-.add-btn:hover{
-  border-color:var(--primary);color:var(--primary);
-  background:var(--primary-soft);border-style:solid;
-}
+.add-row:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft);border-style:solid}
 
-/* ===== HISTORY ===== */
+.gpa-empty{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:32px 20px;text-align:center;color:var(--text-muted);
+  background:var(--surface-2);border:1.5px dashed var(--border-2);border-radius:16px;
+}
+.gpa-empty i{font-size:38px;opacity:.35}
+.gpa-empty p{font-size:.86rem;margin:0}
+.gpa-empty .sm{font-size:.76rem;opacity:.8}
+
+/* HISTORY */
 .history-section{
-  margin-top:24px;background:var(--surface);
-  border:1px solid var(--border);border-radius:24px;
-  padding:24px;box-shadow:var(--shadow);
+  margin-top:24px;background:var(--surface);border:1px solid var(--border);
+  border-radius:24px;padding:24px;box-shadow:var(--shadow);
 }
-.history-head{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;flex-wrap:wrap;margin-bottom:16px;
-}
-.history-head h2{
-  font-size:1.05rem;font-weight:700;
-  display:flex;align-items:center;gap:10px;
-}
+.history-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.history-head h2{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:10px}
 .history-head h2 i{color:var(--primary)}
-.history-head .search{
-  flex:1;min-width:180px;max-width:300px;position:relative;
-}
-.history-head .search i{
-  position:absolute;left:14px;top:50%;transform:translateY(-50%);
-  color:var(--text-muted);font-size:13px;pointer-events:none;
-}
+.history-head .search{flex:1;min-width:180px;max-width:300px;position:relative}
+.history-head .search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
 .history-head .search input{
   width:100%;padding:9px 14px 9px 38px;
   border:1.5px solid var(--border);border-radius:999px;
   background:var(--surface-2);color:var(--text);
   font-family:inherit;font-size:.85rem;outline:none;transition:var(--tr);
 }
-.history-head .search input:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 4px var(--primary-soft);
-}
-
-.history-list{
-  display:flex;flex-direction:column;gap:10px;
-  max-height:400px;overflow-y:auto;
-}
+.history-head .search input:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
+.history-list{display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto}
 .history-list::-webkit-scrollbar{width:6px}
 .history-list::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
-
 .history-item{
   background:var(--surface-2);border:1px solid var(--border);
-  border-radius:14px;padding:14px 16px;
-  transition:var(--tr);animation:fadeIn .3s ease;
+  border-radius:14px;padding:14px 16px;transition:var(--tr);animation:fadeIn .3s ease;
 }
-.history-item:hover{
-  border-color:var(--border-2);box-shadow:var(--shadow);
-  transform:translateY(-1px);
-}
-.history-item .top{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;margin-bottom:8px;
-}
+.history-item:hover{border-color:var(--border-2);box-shadow:var(--shadow);transform:translateY(-1px)}
+.history-item .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
 .history-item .mode{
   display:inline-flex;align-items:center;gap:6px;
   padding:3px 10px;border-radius:999px;
   background:var(--primary-soft);color:var(--primary);
-  font-size:.72rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:.04em;
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
 }
 .history-item .time{font-size:.72rem;color:var(--text-muted);font-weight:500}
 .history-item .content{font-size:.86rem;color:var(--text);line-height:1.6}
@@ -347,20 +305,14 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
 .history-item .actions button{
   width:28px;height:28px;border-radius:8px;border:none;
   background:transparent;color:var(--text-muted);
-  cursor:pointer;display:grid;place-items:center;
-  font-size:12px;transition:var(--tr);
+  cursor:pointer;display:grid;place-items:center;font-size:12px;transition:var(--tr);
 }
 .history-item .actions button:hover{background:var(--primary-soft);color:var(--primary)}
 .history-item .actions button.del:hover{background:var(--danger-soft);color:var(--danger)}
+.empty-history{text-align:center;padding:40px 20px;color:var(--text-muted)}
+.empty-history i{font-size:36px;opacity:.3;margin-bottom:12px;display:block}
 
-.empty-history{
-  text-align:center;padding:40px 20px;color:var(--text-muted);
-}
-.empty-history i{
-  font-size:36px;opacity:.3;margin-bottom:12px;display:block;
-}
-
-/* ===== BUTTONS ===== */
+/* BUTTONS */
 .btn{
   padding:10px 18px;border:1.5px solid var(--border);
   border-radius:12px;background:var(--surface);color:var(--text);
@@ -369,15 +321,12 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
   display:inline-flex;align-items:center;gap:8px;
 }
 .btn:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-1px)}
-.btn-primary{
-  background:var(--primary-grad);color:#fff;border-color:transparent;
-  box-shadow:0 6px 16px -6px rgba(99,102,241,.5);
-}
+.btn-primary{background:var(--primary-grad);color:#fff;border-color:transparent;box-shadow:0 6px 16px -6px rgba(99,102,241,.5)}
 .btn-primary:hover{color:#fff;box-shadow:0 10px 20px -6px rgba(99,102,241,.7)}
 .btn-danger{color:var(--danger);border-color:rgba(239,68,68,.3)}
 .btn-danger:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
 
-/* ===== TOAST ===== */
+/* TOAST */
 .toast{
   position:fixed;bottom:24px;left:50%;
   transform:translateX(-50%) translateY(20px);
@@ -390,7 +339,7 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.error{background:var(--danger);color:#fff}
 
-/* ===== RESPONSIVE ===== */
+/* RESPONSIVE */
 @media (max-width:640px){
   body{padding:16px 12px 40px}
   .panel,.history-section{padding:18px;border-radius:20px}
@@ -403,8 +352,13 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
   .res-row{flex-wrap:wrap;padding:10px 12px}
   .res-row .label{font-size:.82rem}
   .res-row .value{font-size:.95rem;padding:3px 10px}
-  .subject-row{grid-template-columns:1fr 80px 40px}
-  .subject-row .subj-weight{display:none}
+  .gpa-toolbar{padding:8px 10px}
+  .subject-row{
+    grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr) minmax(0,.7fr) 34px;
+    gap:6px;padding:7px 8px;
+  }
+  .subject-row .input{padding:8px 10px;font-size:.8rem}
+  .subject-row .subj-weight{padding:8px 4px}
   .history-head{align-items:stretch}
   .history-head .search{max-width:none}
   .scale-switch button{padding:6px 12px;font-size:.75rem}
@@ -416,9 +370,25 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
 </head>
 <body>
 
+<datalist id="subject-names">
+  <option value="Toán">
+  <option value="Ngữ văn">
+  <option value="Tiếng Anh">
+  <option value="Vật lý">
+  <option value="Hóa học">
+  <option value="Sinh học">
+  <option value="Lịch sử">
+  <option value="Địa lý">
+  <option value="GDCD">
+  <option value="Tin học">
+  <option value="Công nghệ">
+  <option value="Thể dục">
+  <option value="Âm nhạc">
+  <option value="Mỹ thuật">
+</datalist>
+
 <div class="app">
 
-  <!-- HEADER -->
   <header class="app-header">
     <div class="brand">
       <div class="brand-logo"><i class="fas fa-graduation-cap"></i></div>
@@ -438,7 +408,6 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
     </div>
   </header>
 
-  <!-- TABS -->
   <nav class="tabs" id="tabs">
     <button class="tab-btn active" data-panel="panel-hk2"><i class="fas fa-bullseye"></i> HK2 cần</button>
     <button class="tab-btn" data-panel="panel-ck"><i class="fas fa-flag-checkered"></i> Cuối kỳ cần</button>
@@ -448,7 +417,6 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
   </nav>
 
   <main>
-    <!-- PANEL 1 -->
     <section class="panel" id="panel-hk2">
       <div class="panel-title"><i class="fas fa-bullseye"></i> Điểm HK2 cần để đạt mục tiêu cả năm</div>
       <p class="panel-hint">Công thức: ĐTBCN = (HK1 + 2×HK2) / 3 → HK2 cần = (3×Mục tiêu − HK1) / 2</p>
@@ -474,7 +442,6 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
       <div class="result empty" id="result-hk2">Nhập điểm để xem kết quả</div>
     </section>
 
-    <!-- PANEL 2 -->
     <section class="panel" id="panel-ck" hidden>
       <div class="panel-title"><i class="fas fa-flag-checkered"></i> Điểm cuối kỳ cần để đạt ĐTB HK2</div>
       <p class="panel-hint">Công thức: ĐTBHK2 = (ΣTX + 2×GK + 3×CK) / (n + 5)</p>
@@ -505,7 +472,6 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
       <div class="result empty" id="result-ck">Nhập điểm để xem kết quả</div>
     </section>
 
-    <!-- PANEL 3 -->
     <section class="panel" id="panel-tb" hidden>
       <div class="panel-title"><i class="fas fa-chart-simple"></i> Tính điểm trung bình môn</div>
       <p class="panel-hint">Công thức: ĐTB = (ΣTX + 2×GK + 3×CK) / (n + 5)</p>
@@ -528,7 +494,6 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
       <div class="result empty" id="result-tb">Nhập điểm để xem kết quả</div>
     </section>
 
-    <!-- PANEL 4 -->
     <section class="panel" id="panel-nam" hidden>
       <div class="panel-title"><i class="fas fa-calendar-days"></i> Điểm cả năm</div>
       <p class="panel-hint">Nhập HK1 + HK2 để tính ĐTBCN, hoặc HK1 + mục tiêu để tính HK2 cần</p>
@@ -551,22 +516,40 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
       <div class="result empty" id="result-nam">Nhập dữ liệu để xem kết quả</div>
     </section>
 
-    <!-- PANEL 5: GPA -->
+    <!-- ===== GPA PANEL (nâng cấp) ===== -->
     <section class="panel" id="panel-gpa" hidden>
       <div class="panel-title"><i class="fas fa-layer-group"></i> GPA nhiều môn</div>
-      <p class="panel-hint">Nhập điểm TB từng môn. Cột HS là hệ số tín chỉ (mặc định 1)</p>
+      <p class="panel-hint">
+        Nhập điểm TB từng môn. Cột <strong>HS</strong> = hệ số tín chỉ (mặc định 1).
+        Điểm để trống sẽ được bỏ qua.
+      </p>
+
+      <div class="gpa-toolbar">
+        <div class="gpa-tools">
+          <button class="btn" id="gpa-add"><i class="fas fa-plus"></i> Thêm môn</button>
+          <button class="btn" id="gpa-sample" title="Điền nhanh dữ liệu mẫu"><i class="fas fa-wand-magic-sparkles"></i> Mẫu</button>
+          <select class="input gpa-sort" id="gpa-sort" title="Sắp xếp danh sách">
+            <option value="none">Thứ tự nhập</option>
+            <option value="score-desc">Điểm cao → thấp</option>
+            <option value="score-asc">Điểm thấp → cao</option>
+            <option value="name">Tên A → Z</option>
+          </select>
+        </div>
+        <button class="btn btn-danger" id="gpa-clear" title="Xóa toàn bộ môn"><i class="fas fa-trash"></i></button>
+      </div>
 
       <div class="subjects" id="gpa-subjects"></div>
 
-      <button class="add-btn" id="gpa-add">
-        <i class="fas fa-plus"></i> Thêm môn học
-      </button>
-
-      <div class="result empty" id="result-gpa" style="margin-top:20px">Thêm môn để tính GPA</div>
+      <div class="result empty" id="result-gpa">
+        <div class="gpa-empty">
+          <i class="fas fa-graduation-cap"></i>
+          <p>Chưa có môn nào</p>
+          <p class="sm">Bấm <strong>+ Thêm môn</strong> hoặc <strong>Mẫu</strong> để bắt đầu</p>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- HISTORY -->
   <section class="history-section">
     <div class="history-head">
       <h2><i class="fas fa-clock-rotate-left"></i> Lịch sử</h2>
@@ -575,15 +558,9 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
         <input type="text" id="history-search" placeholder="Tìm kiếm trong lịch sử...">
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" id="copy-result-btn" title="Sao chép kết quả hiện tại">
-          <i class="fas fa-copy"></i>
-        </button>
-        <button class="btn btn-primary" id="save-history-btn">
-          <i class="fas fa-bookmark"></i> Lưu kết quả
-        </button>
-        <button class="btn btn-danger" id="clear-history-btn" title="Xóa tất cả lịch sử">
-          <i class="fas fa-trash"></i>
-        </button>
+        <button class="btn" id="copy-result-btn" title="Sao chép kết quả hiện tại"><i class="fas fa-copy"></i></button>
+        <button class="btn btn-primary" id="save-history-btn"><i class="fas fa-bookmark"></i> Lưu kết quả</button>
+        <button class="btn btn-danger" id="clear-history-btn" title="Xóa tất cả lịch sử"><i class="fas fa-trash"></i></button>
       </div>
     </div>
     <div class="history-list" id="history-list"></div>
@@ -606,6 +583,13 @@ const state = {
   gpaSubjects: safeJSON(localStorage.getItem(LS.gpa), []),
   searchTerm: ''
 };
+
+// Fix NaN sau JSON roundtrip (null → NaN để logic nhất quán)
+state.gpaSubjects = state.gpaSubjects.map(s => ({
+  name: s && typeof s.name === 'string' ? s.name : '',
+  score: s && (s.score === null || s.score === undefined) ? NaN : Number(s.score),
+  weight: s && Number.isFinite(Number(s.weight)) && Number(s.weight) > 0 ? Number(s.weight) : 1
+}));
 
 const PANEL_RESULT = {
   'panel-hk2':'result-hk2',
@@ -634,17 +618,22 @@ function fmt(n){
   return roundScore(n).toFixed(1);
 }
 function parseOne(str){
-  if (!str || !str.trim()) return NaN;
-  return parseFloat(str.trim().replace(',', '.'));
+  if (str === null || str === undefined) return NaN;
+  const s = String(str);
+  if (!s.trim()) return NaN;
+  return parseFloat(s.trim().replace(/,/g, '.'));
 }
 function parseNumbers(str){
   if (!str || !str.trim()) return [];
   return str.trim().split(/\s+/).map(s => {
-    const n = parseFloat(s.replace(',', '.'));
+    const n = parseFloat(s.replace(/,/g, '.'));
     return isNaN(n) ? null : n;
   }).filter(n => n !== null);
 }
 function isValidScore(n){ return !isNaN(n) && n >= 0 && n <= state.scale; }
+function debounce(fn, ms){
+  let t; return function(...a){ clearTimeout(t); t = setTimeout(() => fn.apply(this, a), ms); };
+}
 
 function toast(msg, type){
   const t = $('toast');
@@ -653,7 +642,6 @@ function toast(msg, type){
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 2200);
 }
-
 function showEmpty(el, msg){
   el.className = 'result empty';
   el.textContent = msg;
@@ -662,7 +650,6 @@ function showError(el, msg){
   el.className = 'result error';
   el.innerHTML = '<i class="fas fa-triangle-exclamation"></i> ' + escapeHtml(msg);
 }
-
 function classify(needed){
   if (needed <= 0) return 'success';
   if (needed <= state.scale * 0.6) return 'success';
@@ -670,8 +657,16 @@ function classify(needed){
   if (needed <= state.scale) return 'warning';
   return 'danger';
 }
+function scoreClass(score){
+  if (!isValidScore(score)) return '';
+  const pct = score / state.scale;
+  if (pct >= 0.8) return 'score-great';
+  if (pct >= 0.65) return 'score-good';
+  if (pct >= 0.5) return 'score-ok';
+  return 'score-bad';
+}
 
-/* ========== THEME ========== */
+/* ========== THEME / SCALE ========== */
 function applyTheme(){
   document.body.classList.toggle('dark', state.darkMode);
   $('themeIcon').className = state.darkMode ? 'fas fa-moon' : 'fas fa-sun';
@@ -682,7 +677,6 @@ $('themeToggle').addEventListener('click', () => {
   applyTheme();
 });
 
-/* ========== SCALE ========== */
 function applyScale(){
   $$('.scale-switch button').forEach(b => {
     b.classList.toggle('active', parseInt(b.dataset.scale) === state.scale);
@@ -732,21 +726,16 @@ function calcHK2(){
 
   if (!hk1El.value.trim()){
     showEmpty(result, 'Nhập điểm HK1 để bắt đầu');
-    hk1El.classList.remove('error');
-    return;
+    hk1El.classList.remove('error'); return;
   }
   if (!isValidScore(hk1)){
     showError(result, `HK1 phải từ 0 đến ${state.scale}`);
-    hk1El.classList.add('error');
-    return;
+    hk1El.classList.add('error'); return;
   }
   hk1El.classList.remove('error');
 
   const targets = parseNumbers($('targets-hk2').value).filter(t => isValidScore(t));
-  if (!targets.length){
-    showEmpty(result, 'Nhập ít nhất 1 mục tiêu');
-    return;
-  }
+  if (!targets.length){ showEmpty(result, 'Nhập ít nhất 1 mục tiêu'); return; }
 
   let html = '<div class="result-title">Kết quả</div>';
   targets.forEach(t => {
@@ -762,11 +751,10 @@ function calcHK2(){
         <div class="res-meta">HK2 tối đa <strong>${state.scale}</strong> → ĐTBCN tối đa = <strong>${fmt(maxCN)}</strong> (thiếu <strong>${fmt(t - maxCN)}</strong>)</div>
       `;
     } else {
-      const clamped = Math.max(0, needed);
       html += `
         <div class="res-row ${cls}">
           <span class="label">ĐTBCN ≥ ${fmt(t)}</span>
-          <span class="value">${fmt(clamped)}</span>
+          <span class="value">${fmt(Math.max(0, needed))}</span>
         </div>
       `;
     }
@@ -783,25 +771,12 @@ function calcCK(){
   const txArr = parseNumbers(txEl.value);
   const gk = parseOne(gkEl.value);
 
-  if (!txEl.value.trim() || !gkEl.value.trim()){
-    showEmpty(result, 'Nhập điểm TX và giữa kỳ');
-    return;
-  }
-  const badTx = txArr.find(v => !isValidScore(v));
-  if (badTx !== undefined){
-    showError(result, `Điểm TX phải từ 0 đến ${state.scale}`);
-    return;
-  }
-  if (!isValidScore(gk)){
-    showError(result, `Điểm giữa kỳ phải từ 0 đến ${state.scale}`);
-    return;
-  }
+  if (!txEl.value.trim() || !gkEl.value.trim()){ showEmpty(result, 'Nhập điểm TX và giữa kỳ'); return; }
+  if (txArr.some(v => !isValidScore(v))){ showError(result, `Điểm TX phải từ 0 đến ${state.scale}`); return; }
+  if (!isValidScore(gk)){ showError(result, `Điểm giữa kỳ phải từ 0 đến ${state.scale}`); return; }
 
   const targets = parseNumbers($('targets-ck').value).filter(t => isValidScore(t));
-  if (!targets.length){
-    showEmpty(result, 'Nhập ít nhất 1 mục tiêu ĐTB HK2');
-    return;
-  }
+  if (!targets.length){ showEmpty(result, 'Nhập ít nhất 1 mục tiêu ĐTB HK2'); return; }
 
   const sumTx = txArr.reduce((a,b) => a+b, 0);
   const n = txArr.length;
@@ -811,8 +786,7 @@ function calcCK(){
     const needed = (t * (n + 5) - sumTx - 2 * gk) / 3;
     const cls = classify(needed);
     if (needed > state.scale){
-      const maxCK = state.scale;
-      const maxDTB = (sumTx + 2 * gk + 3 * maxCK) / (n + 5);
+      const maxDTB = (sumTx + 2 * gk + 3 * state.scale) / (n + 5);
       html += `
         <div class="res-row danger">
           <span class="label">ĐTBHK2 ≥ ${fmt(t)}</span>
@@ -821,11 +795,10 @@ function calcCK(){
         <div class="res-meta">Nếu CK = ${state.scale}, ĐTBHK2 tối đa = <strong>${fmt(maxDTB)}</strong> (thiếu <strong>${fmt(t - maxDTB)}</strong>)</div>
       `;
     } else {
-      const clamped = Math.max(0, needed);
       html += `
         <div class="res-row ${cls}">
           <span class="label">ĐTBHK2 ≥ ${fmt(t)}</span>
-          <span class="value">${fmt(clamped)}</span>
+          <span class="value">${fmt(Math.max(0, needed))}</span>
         </div>
       `;
     }
@@ -842,70 +815,39 @@ function calcTB(){
   const ck = parseOne($('ck-tb').value);
   const result = $('result-tb');
 
-  if (!txArr.length && isNaN(gk) && isNaN(ck)){
-    showEmpty(result, 'Nhập điểm để tính ĐTB môn');
-    return;
-  }
-  if (!txArr.length){
-    showError(result, 'Cần nhập ít nhất 1 điểm thường xuyên');
-    return;
-  }
-  if (txArr.some(v => !isValidScore(v))){
-    showError(result, `Điểm TX phải từ 0 đến ${state.scale}`);
-    return;
-  }
-  if (isNaN(gk) || isNaN(ck)){
-    showError(result, 'Cần nhập đủ giữa kỳ và cuối kỳ');
-    return;
-  }
-  if (!isValidScore(gk) || !isValidScore(ck)){
-    showError(result, `Điểm phải từ 0 đến ${state.scale}`);
-    return;
-  }
+  if (!txArr.length && isNaN(gk) && isNaN(ck)){ showEmpty(result, 'Nhập điểm để tính ĐTB môn'); return; }
+  if (!txArr.length){ showError(result, 'Cần nhập ít nhất 1 điểm thường xuyên'); return; }
+  if (txArr.some(v => !isValidScore(v))){ showError(result, `Điểm TX phải từ 0 đến ${state.scale}`); return; }
+  if (isNaN(gk) || isNaN(ck)){ showError(result, 'Cần nhập đủ giữa kỳ và cuối kỳ'); return; }
+  if (!isValidScore(gk) || !isValidScore(ck)){ showError(result, `Điểm phải từ 0 đến ${state.scale}`); return; }
 
   const sumTx = txArr.reduce((a,b) => a+b, 0);
   const n = txArr.length;
   const dtb = (sumTx + 2*gk + 3*ck) / (n + 5);
 
   let rank = '';
-  if (state.scale === 10){
-    if (dtb >= 8) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
-    else if (dtb >= 6.5) rank = '👍 Xếp loại <strong>Khá</strong>';
-    else if (dtb >= 5) rank = '📚 Xếp loại <strong>Trung bình</strong>';
-    else if (dtb >= 3.5) rank = '📖 Xếp loại <strong>Yếu</strong>';
-    else rank = '⚠️ Xếp loại <strong>Kém</strong>';
-  } else {
-    if (dtb >= 80) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
-    else if (dtb >= 65) rank = '👍 Xếp loại <strong>Khá</strong>';
-    else if (dtb >= 50) rank = '📚 Xếp loại <strong>Trung bình</strong>';
-    else if (dtb >= 35) rank = '📖 Xếp loại <strong>Yếu</strong>';
-    else rank = '⚠️ Xếp loại <strong>Kém</strong>';
-  }
+  const r1 = state.scale === 10 ? 8 : 80;
+  const r2 = state.scale === 10 ? 6.5 : 65;
+  const r3 = state.scale === 10 ? 5 : 50;
+  if (dtb >= r1) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
+  else if (dtb >= r2) rank = '👍 Xếp loại <strong>Khá</strong>';
+  else if (dtb >= r3) rank = '📚 Xếp loại <strong>Trung bình</strong>';
+  else rank = '⚠️ Xếp loại dưới trung bình';
 
-  const html = `
+  result.className = 'result';
+  result.innerHTML = `
     <div class="big-value">
       <span class="num">${fmt(dtb)}</span>
       <span class="unit">/ ${state.scale}</span>
     </div>
-    <div class="res-row">
-      <span class="label">ΣTX (${n} điểm)</span>
-      <span class="value">${fmt(sumTx)}</span>
-    </div>
-    <div class="res-row">
-      <span class="label">Giữa kỳ (×2)</span>
-      <span class="value">${fmt(gk)}</span>
-    </div>
-    <div class="res-row">
-      <span class="label">Cuối kỳ (×3)</span>
-      <span class="value">${fmt(ck)}</span>
-    </div>
+    <div class="res-row"><span class="label">ΣTX (${n} điểm)</span><span class="value">${fmt(sumTx)}</span></div>
+    <div class="res-row"><span class="label">Giữa kỳ (×2)</span><span class="value">${fmt(gk)}</span></div>
+    <div class="res-row"><span class="label">Cuối kỳ (×3)</span><span class="value">${fmt(ck)}</span></div>
     <div class="res-meta">
       Công thức: (ΣTX + 2×GK + 3×CK) / (n + 5) = (${fmt(sumTx)} + ${fmt(2*gk)} + ${fmt(3*ck)}) / ${n+5}<br>
       ${rank}
     </div>
   `;
-  result.className = 'result';
-  result.innerHTML = html;
 }
 
 /* ========== PANEL 4: Cả năm ========== */
@@ -915,21 +857,12 @@ function calcNam(){
   const target = parseOne($('target-nam').value);
   const result = $('result-nam');
 
-  if (isNaN(hk1)){
-    showEmpty(result, 'Nhập điểm HK1 để bắt đầu');
-    return;
-  }
-  if (!isValidScore(hk1)){
-    showError(result, `HK1 phải từ 0 đến ${state.scale}`);
-    return;
-  }
+  if (isNaN(hk1)){ showEmpty(result, 'Nhập điểm HK1 để bắt đầu'); return; }
+  if (!isValidScore(hk1)){ showError(result, `HK1 phải từ 0 đến ${state.scale}`); return; }
 
-  // Case 1: chỉ có HK1 + target → tính HK2 cần
+  // Case 1: HK1 + target (không có HK2) → HK2 cần
   if (isNaN(hk2) && !isNaN(target)){
-    if (!isValidScore(target)){
-      showError(result, `Mục tiêu phải từ 0 đến ${state.scale}`);
-      return;
-    }
+    if (!isValidScore(target)){ showError(result, `Mục tiêu phải từ 0 đến ${state.scale}`); return; }
     const needed = (3 * target - hk1) / 2;
     const cls = classify(needed);
     let html = '<div class="result-title">HK2 cần</div>';
@@ -956,67 +889,66 @@ function calcNam(){
     return;
   }
 
-  // Case 2: có HK1 + HK2 → tính ĐTBCN
+  // Case 2: có HK1 + HK2 → ĐTBCN
   if (!isNaN(hk2)){
-    if (!isValidScore(hk2)){
-      showError(result, `HK2 phải từ 0 đến ${state.scale}`);
-      return;
-    }
+    if (!isValidScore(hk2)){ showError(result, `HK2 phải từ 0 đến ${state.scale}`); return; }
     const dtbcn = (hk1 + 2 * hk2) / 3;
+    const r1 = state.scale === 10 ? 8 : 80;
+    const r2 = state.scale === 10 ? 6.5 : 65;
+    const r3 = state.scale === 10 ? 5 : 50;
     let rank = '';
-    if (state.scale === 10){
-      if (dtbcn >= 8) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
-      else if (dtbcn >= 6.5) rank = '👍 Xếp loại <strong>Khá</strong>';
-      else if (dtbcn >= 5) rank = '📚 Xếp loại <strong>Trung bình</strong>';
-      else rank = '⚠️ Xếp loại dưới trung bình';
-    } else {
-      if (dtbcn >= 80) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
-      else if (dtbcn >= 65) rank = '👍 Xếp loại <strong>Khá</strong>';
-      else if (dtbcn >= 50) rank = '📚 Xếp loại <strong>Trung bình</strong>';
-      else rank = '⚠️ Xếp loại dưới trung bình';
-    }
-    const html = `
+    if (dtbcn >= r1) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
+    else if (dtbcn >= r2) rank = '👍 Xếp loại <strong>Khá</strong>';
+    else if (dtbcn >= r3) rank = '📚 Xếp loại <strong>Trung bình</strong>';
+    else rank = '⚠️ Xếp loại dưới trung bình';
+
+    result.className = 'result';
+    result.innerHTML = `
       <div class="big-value">
         <span class="num">${fmt(dtbcn)}</span>
         <span class="unit">/ ${state.scale}</span>
       </div>
-      <div class="res-row">
-        <span class="label">HK1</span>
-        <span class="value">${fmt(hk1)}</span>
-      </div>
-      <div class="res-row">
-        <span class="label">HK2 (×2)</span>
-        <span class="value">${fmt(hk2)}</span>
-      </div>
+      <div class="res-row"><span class="label">HK1</span><span class="value">${fmt(hk1)}</span></div>
+      <div class="res-row"><span class="label">HK2 (×2)</span><span class="value">${fmt(hk2)}</span></div>
       <div class="res-meta">
         Công thức: (HK1 + 2×HK2) / 3 = (${fmt(hk1)} + ${fmt(2*hk2)}) / 3<br>
         ${rank}
       </div>
     `;
-    result.className = 'result';
-    result.innerHTML = html;
     return;
   }
 
   showEmpty(result, 'Nhập HK2 hoặc mục tiêu để tính tiếp');
 }
 
-/* ========== PANEL 5: GPA ========== */
+/* ========== PANEL 5: GPA (FIXED & UPGRADED) ========== */
+
+// Render danh sách môn từ state
 function renderSubjects(){
   const wrap = $('gpa-subjects');
   if (!state.gpaSubjects.length){
     wrap.innerHTML = '';
     return;
   }
-  wrap.innerHTML = state.gpaSubjects.map((s, i) => `
-    <div class="subject-row" data-idx="${i}">
-      <input type="text" class="input subj-name" placeholder="Tên môn" value="${escapeHtml(s.name || '')}" autocomplete="off">
-      <input type="text" class="input subj-score" placeholder="Điểm" value="${s.score != null ? s.score : ''}" autocomplete="off">
-      <input type="text" class="input subj-weight" placeholder="HS" value="${s.weight || 1}" autocomplete="off">
-      <button class="icon-btn-sm subj-del" title="Xóa môn"><i class="fas fa-times"></i></button>
-    </div>
-  `).join('');
+  wrap.innerHTML = state.gpaSubjects.map((s, i) => {
+    const scoreVal = Number.isFinite(s.score) ? s.score : '';
+    const cls = scoreClass(s.score);
+    const name = escapeHtml(s.name || '');
+    return `
+      <div class="subject-row ${cls}" data-idx="${i}">
+        <input type="text" class="input subj-name" list="subject-names"
+               placeholder="Tên môn" value="${name}" autocomplete="off">
+        <input type="text" class="input subj-score" inputmode="decimal"
+               placeholder="Điểm" value="${scoreVal}" autocomplete="off">
+        <input type="text" class="input subj-weight" inputmode="decimal"
+               placeholder="HS" value="${s.weight || 1}" title="Hệ số tín chỉ" autocomplete="off">
+        <button class="icon-btn-sm subj-del" title="Xóa môn"><i class="fas fa-times"></i></button>
+      </div>
+    `;
+  }).join('');
 }
+
+// Đọc dữ liệu từ DOM → state
 function syncSubjectsFromDOM(){
   const rows = $$('#gpa-subjects .subject-row');
   state.gpaSubjects = Array.from(rows).map(row => ({
@@ -1024,14 +956,43 @@ function syncSubjectsFromDOM(){
     score: parseOne(row.querySelector('.subj-score').value),
     weight: parseOne(row.querySelector('.subj-weight').value) || 1
   }));
-  localStorage.setItem(LS.gpa, JSON.stringify(state.gpaSubjects));
 }
+
+// Cập nhật màu viền theo điểm (không re-render để giữ focus)
+function updateRowClasses(){
+  $$('#gpa-subjects .subject-row').forEach(row => {
+    row.classList.remove('score-great','score-good','score-ok','score-bad');
+    const score = parseOne(row.querySelector('.subj-score').value);
+    const cls = scoreClass(score);
+    if (cls) row.classList.add(cls);
+  });
+}
+
+// Ghi localStorage (debounced)
+const persistGPA = debounce(() => {
+  // Chuyển NaN → null để JSON hợp lệ
+  const safe = state.gpaSubjects.map(s => ({
+    name: s.name,
+    score: Number.isFinite(s.score) ? s.score : null,
+    weight: s.weight
+  }));
+  localStorage.setItem(LS.gpa, JSON.stringify(safe));
+}, 250);
+
+// Tính GPA
 function calcGPA(){
   const result = $('result-gpa');
   const valid = state.gpaSubjects.filter(s => isValidScore(s.score) && s.weight > 0);
 
   if (!valid.length){
-    showEmpty(result, 'Nhập điểm ít nhất 1 môn để tính GPA');
+    result.className = 'result empty';
+    result.innerHTML = `
+      <div class="gpa-empty">
+        <i class="fas fa-graduation-cap"></i>
+        <p>Chưa có môn nào hợp lệ</p>
+        <p class="sm">Bấm <strong>+ Thêm môn</strong> hoặc <strong>Mẫu</strong> để bắt đầu</p>
+      </div>
+    `;
     return;
   }
 
@@ -1045,26 +1006,23 @@ function calcGPA(){
     if (s.score < minSub.score) minSub = s;
   });
 
+  const r1 = state.scale === 10 ? 8 : 80;
+  const r2 = state.scale === 10 ? 6.5 : 65;
+  const r3 = state.scale === 10 ? 5 : 50;
   let rank = '';
-  if (state.scale === 10){
-    if (gpa >= 8) rank = '🎉 GPA đạt loại <strong>Giỏi</strong>';
-    else if (gpa >= 6.5) rank = '👍 GPA đạt loại <strong>Khá</strong>';
-    else if (gpa >= 5) rank = '📚 GPA đạt loại <strong>Trung bình</strong>';
-    else rank = '⚠️ GPA dưới trung bình';
-  } else {
-    if (gpa >= 80) rank = '🎉 GPA đạt loại <strong>Giỏi</strong>';
-    else if (gpa >= 65) rank = '👍 GPA đạt loại <strong>Khá</strong>';
-    else if (gpa >= 50) rank = '📚 GPA đạt loại <strong>Trung bình</strong>';
-    else rank = '⚠️ GPA dưới trung bình';
-  }
+  if (gpa >= r1) rank = '🎉 GPA đạt loại <strong>Giỏi</strong>';
+  else if (gpa >= r2) rank = '👍 GPA đạt loại <strong>Khá</strong>';
+  else if (gpa >= r3) rank = '📚 GPA đạt loại <strong>Trung bình</strong>';
+  else rank = '⚠️ GPA dưới trung bình';
 
-  const html = `
+  result.className = 'result';
+  result.innerHTML = `
     <div class="big-value">
       <span class="num">${fmt(gpa)}</span>
       <span class="unit">/ ${state.scale}</span>
     </div>
-    <div class="res-row">
-      <span class="label">Số môn tính</span>
+    <div class="res-row success">
+      <span class="label">Tổng môn tính</span>
       <span class="value">${valid.length} / ${state.gpaSubjects.length}</span>
     </div>
     <div class="res-row success">
@@ -1076,35 +1034,117 @@ function calcGPA(){
       <span class="value">${fmt(minSub.score)}</span>
     </div>
     <div class="res-meta">
-      Tổng hệ số: <strong>${sumWeight}</strong> · ${rank}
+      Tổng hệ số: <strong>${sumWeight.toFixed(sumWeight % 1 ? 1 : 0)}</strong> · ${rank}
     </div>
   `;
-  result.className = 'result';
-  result.innerHTML = html;
 }
 
+/* --- GPA interactions --- */
+
+// ✅ FIX: sync trước khi push
 $('gpa-add').addEventListener('click', () => {
-  state.gpaSubjects.push({ name:'', score: NaN, weight: 1 });
   syncSubjectsFromDOM();
+  state.gpaSubjects.push({ name: '', score: NaN, weight: 1 });
+  persistGPA();
   renderSubjects();
+  calcGPA();
   const rows = $$('#gpa-subjects .subject-row');
-  if (rows.length) rows[rows.length-1].querySelector('.subj-name').focus();
+  if (rows.length){
+    rows[rows.length - 1].querySelector('.subj-name').focus();
+  }
 });
 
+// Mẫu
+const SAMPLE_SUBJECTS = [
+  { name: 'Toán',      score: 8.0, weight: 2 },
+  { name: 'Ngữ văn',   score: 7.5, weight: 2 },
+  { name: 'Tiếng Anh', score: 9.0, weight: 1 },
+  { name: 'Vật lý',    score: 7.0, weight: 1 },
+  { name: 'Hóa học',   score: 8.5, weight: 1 }
+];
+$('gpa-sample').addEventListener('click', () => {
+  if (state.gpaSubjects.length && !confirm('Ghi đè danh sách hiện tại bằng dữ liệu mẫu?')) return;
+  state.gpaSubjects = SAMPLE_SUBJECTS.map(s => ({ ...s }));
+  persistGPA();
+  renderSubjects();
+  calcGPA();
+  toast('Đã điền dữ liệu mẫu');
+});
+
+// Xóa hết
+$('gpa-clear').addEventListener('click', () => {
+  if (!state.gpaSubjects.length) return toast('Danh sách đã trống');
+  if (!confirm('Xóa toàn bộ môn trong danh sách?')) return;
+  state.gpaSubjects = [];
+  persistGPA();
+  renderSubjects();
+  calcGPA();
+  toast('Đã xóa toàn bộ môn');
+});
+
+// Sắp xếp
+$('gpa-sort').addEventListener('change', e => {
+  const mode = e.target.value;
+  if (mode === 'none') return;
+  syncSubjectsFromDOM();
+  const copy = state.gpaSubjects.slice();
+  if (mode === 'score-desc'){
+    copy.sort((a,b) => (Number.isFinite(b.score) ? b.score : -1) - (Number.isFinite(a.score) ? a.score : -1));
+  } else if (mode === 'score-asc'){
+    copy.sort((a,b) => (Number.isFinite(a.score) ? a.score : state.scale + 1) - (Number.isFinite(b.score) ? b.score : state.scale + 1));
+  } else if (mode === 'name'){
+    copy.sort((a,b) => (a.name || '').localeCompare(b.name || '', 'vi'));
+  }
+  state.gpaSubjects = copy;
+  persistGPA();
+  renderSubjects();
+  calcGPA();
+  toast('Đã sắp xếp');
+});
+
+// Delegated: input → sync + class + calc
+$('gpa-subjects').addEventListener('input', () => {
+  syncSubjectsFromDOM();
+  updateRowClasses();
+  persistGPA();
+  calcGPA();
+});
+
+// Delegated: xóa môn
 $('gpa-subjects').addEventListener('click', e => {
   const btn = e.target.closest('.subj-del');
   if (!btn) return;
   const row = btn.closest('.subject-row');
-  const idx = parseInt(row.dataset.idx);
+  const idx = parseInt(row.dataset.idx, 10);
+  syncSubjectsFromDOM();
   state.gpaSubjects.splice(idx, 1);
-  localStorage.setItem(LS.gpa, JSON.stringify(state.gpaSubjects));
+  persistGPA();
   renderSubjects();
   calcGPA();
+  toast('Đã xóa môn');
 });
 
-$('gpa-subjects').addEventListener('input', () => {
-  syncSubjectsFromDOM();
-  calcGPA();
+// Enter → nhảy ô tiếp theo trong row, hoặc tạo row mới nếu ở ô cuối
+$('gpa-subjects').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const row = e.target.closest('.subject-row');
+  if (!row) return;
+  e.preventDefault();
+  const fields = row.querySelectorAll('input');
+  const curIdx = Array.from(fields).indexOf(e.target);
+  if (curIdx < fields.length - 1){
+    fields[curIdx + 1].focus();
+    fields[curIdx + 1].select?.();
+  } else {
+    // Ở ô cuối cùng → thêm môn mới
+    syncSubjectsFromDOM();
+    state.gpaSubjects.push({ name: '', score: NaN, weight: 1 });
+    persistGPA();
+    renderSubjects();
+    calcGPA();
+    const rows = $$('#gpa-subjects .subject-row');
+    rows[rows.length - 1].querySelector('.subj-name').focus();
+  }
 });
 
 /* ========== COMPUTE ALL ========== */
@@ -1117,16 +1157,14 @@ function computeAll(){
 }
 
 /* ========== REAL-TIME INPUT ========== */
-const inputIds = ['hk1','targets-hk2','tx-ck','gk-ck','targets-ck','tx-tb','gk-tb','ck-tb','hk1-nam','hk2-nam','target-nam'];
-inputIds.forEach(id => {
-  const el = $(id);
-  if (el) el.addEventListener('input', computeAll);
-});
+['hk1','targets-hk2','tx-ck','gk-ck','targets-ck','tx-tb','gk-tb','ck-tb','hk1-nam','hk2-nam','target-nam']
+  .forEach(id => {
+    const el = $(id);
+    if (el) el.addEventListener('input', computeAll);
+  });
 
 /* ========== HISTORY ========== */
-function saveHistoryToStorage(){
-  localStorage.setItem(LS.history, JSON.stringify(state.history));
-}
+function saveHistoryToStorage(){ localStorage.setItem(LS.history, JSON.stringify(state.history)); }
 
 function getCurrentResult(){
   const activeTab = document.querySelector('.tab-btn.active');
@@ -1147,7 +1185,6 @@ function renderHistory(){
       it.content.toLowerCase().includes(term)
     );
   }
-
   if (!items.length){
     list.innerHTML = `<div class="empty-history">
       <i class="fas fa-inbox"></i>
@@ -1155,7 +1192,6 @@ function renderHistory(){
     </div>`;
     return;
   }
-
   list.innerHTML = items.map(it => `
     <div class="history-item" data-id="${it.id}">
       <div class="top">
@@ -1205,10 +1241,7 @@ $('history-list').addEventListener('click', e => {
 
 $('save-history-btn').addEventListener('click', () => {
   const cur = getCurrentResult();
-  if (!cur){
-    toast('Không có kết quả hợp lệ để lưu', 'error');
-    return;
-  }
+  if (!cur){ toast('Không có kết quả hợp lệ để lưu', 'error'); return; }
   state.history.unshift({
     id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
     mode: cur.mode,
@@ -1231,29 +1264,25 @@ $('clear-history-btn').addEventListener('click', () => {
   }
 });
 
-const searchHistoryDebounced = (() => {
-  let t;
-  return () => { clearTimeout(t); t = setTimeout(renderHistory, 180); };
-})();
+const searchHistoryDebounced = debounce(renderHistory, 180);
 $('history-search').addEventListener('input', e => {
   state.searchTerm = e.target.value;
   searchHistoryDebounced();
 });
 
-/* ========== COPY RESULT ========== */
+/* ========== COPY ========== */
 $('copy-result-btn').addEventListener('click', () => {
   const cur = getCurrentResult();
   if (!cur) return toast('Không có kết quả để sao chép', 'error');
-  // Extract plain text from HTML
   const tmp = document.createElement('div');
   tmp.innerHTML = cur.html;
-  const text = `[${cur.mode}]\n` + tmp.innerText.replace(/\n+/g, '\n').trim();
+  const text = `[${cur.mode}]\n` + tmp.innerText.replace(/\n{3,}/g, '\n\n').trim();
   navigator.clipboard.writeText(text)
     .then(() => toast('Đã sao chép kết quả'))
     .catch(() => toast('Không thể sao chép', 'error'));
 });
 
-/* ========== KEYBOARD SHORTCUTS ========== */
+/* ========== SHORTCUTS ========== */
 document.addEventListener('keydown', e => {
   const ctrl = e.ctrlKey || e.metaKey;
   if (ctrl && e.key.toLowerCase() === 's'){
@@ -1272,6 +1301,7 @@ function init(){
   renderSubjects();
   computeAll();
   renderHistory();
+  // Khôi phục trạng thái sort select (không cần thiết lắm)
 }
 init();
 

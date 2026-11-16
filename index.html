@@ -8,365 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#f4f6fb;--surface:#ffffff;--surface-2:#f8fafc;
-  --text:#0f172a;--text-muted:#64748b;
-  --border:#e2e8f0;--border-2:#cbd5e1;
-  --primary:#6366f1;--primary-2:#8b5cf6;
-  --primary-soft:rgba(99,102,241,.12);
-  --primary-grad:linear-gradient(135deg,#6366f1,#8b5cf6);
-  --success:#10b981;--success-soft:rgba(16,185,129,.12);
-  --warning:#f59e0b;--warning-soft:rgba(245,158,11,.12);
-  --danger:#ef4444;--danger-soft:rgba(239,68,68,.12);
-  --shadow:0 4px 24px -8px rgba(15,23,42,.08);
-  --shadow-lg:0 20px 40px -15px rgba(15,23,42,.2);
-  --tr:all .22s cubic-bezier(.4,0,.2,1);
-}
-body.dark{
-  --bg:#0b1120;--surface:#1a2338;--surface-2:#0f172a;
-  --text:#f1f5f9;--text-muted:#94a3b8;
-  --border:#2d3a52;--border-2:#475569;
-  --primary-soft:rgba(99,102,241,.2);
-  --success-soft:rgba(16,185,129,.2);
-  --warning-soft:rgba(245,158,11,.2);
-  --danger-soft:rgba(239,68,68,.2);
-  --shadow:0 4px 24px -8px rgba(0,0,0,.4);
-  --shadow-lg:0 20px 40px -15px rgba(0,0,0,.6);
-}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Inter',system-ui,sans-serif;
-  background:var(--bg);color:var(--text);
-  min-height:100vh;padding:24px 16px 60px;line-height:1.5;
-  transition:background .3s,color .3s;-webkit-font-smoothing:antialiased;
-}
-body::before{
-  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(circle at 15% 20%,rgba(99,102,241,.18),transparent 42%),
-             radial-gradient(circle at 85% 70%,rgba(139,92,246,.14),transparent 45%);
-  animation:bgMove 25s ease-in-out infinite alternate;
-}
-body.dark::before{opacity:.6}
-@keyframes bgMove{0%{transform:translate(0,0) scale(1)}100%{transform:translate(2%,-2%) scale(1.05)}}
-
-.app{max-width:960px;margin:0 auto}
-
-/* HEADER */
-.app-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
-.brand{display:flex;align-items:center;gap:14px}
-.brand-logo{
-  width:52px;height:52px;border-radius:16px;
-  background:var(--primary-grad);color:#fff;
-  display:grid;place-items:center;font-size:22px;
-  box-shadow:0 10px 24px -8px rgba(99,102,241,.5);
-  position:relative;overflow:hidden;
-}
-.brand-logo::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);
-  animation:shine 4s linear infinite;
-}
-@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.brand h1{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
-.brand p{font-size:.78rem;color:var(--text-muted);font-weight:500}
-.header-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.theme-toggle{
-  width:60px;height:32px;border-radius:999px;
-  background:var(--surface);border:1px solid var(--border);
-  cursor:pointer;position:relative;transition:var(--tr);
-}
-.theme-toggle .thumb{
-  position:absolute;top:2px;left:2px;width:26px;height:26px;
-  border-radius:50%;background:var(--primary-grad);
-  display:grid;place-items:center;color:#fff;font-size:12px;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 4px 10px -2px rgba(99,102,241,.5);
-}
-body.dark .theme-toggle .thumb{transform:translateX(28px)}
-.scale-switch{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
-.scale-switch button{
-  padding:7px 16px;border:none;background:transparent;color:var(--text-muted);
-  font-family:inherit;font-weight:600;font-size:.82rem;
-  cursor:pointer;border-radius:999px;transition:var(--tr);
-}
-.scale-switch button.active{background:var(--primary-grad);color:#fff;box-shadow:0 4px 10px -2px rgba(99,102,241,.4)}
-
-/* TABS */
-.tabs{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab-btn{
-  padding:10px 18px;border:1px solid var(--border);
-  background:var(--surface);border-radius:999px;
-  font-family:inherit;font-weight:600;font-size:.86rem;
-  color:var(--text-muted);cursor:pointer;transition:var(--tr);
-  display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;
-}
-.tab-btn:hover{color:var(--primary);border-color:var(--primary)}
-.tab-btn.active{background:var(--primary-grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px rgba(99,102,241,.6)}
-.tab-btn i{font-size:.9rem}
-
-/* PANEL */
-.panel{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:24px;padding:24px;box-shadow:var(--shadow);
-  animation:fadeIn .35s ease;
-}
-.panel[hidden]{display:none!important}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.panel-title{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:700;margin-bottom:6px}
-.panel-title i{color:var(--primary)}
-.panel-hint{font-size:.84rem;color:var(--text-muted);margin-bottom:20px}
-.panel-hint strong{color:var(--primary)}
-
-/* FORM */
-.field{margin-bottom:16px}
-.field label{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px}
-.field label i{color:var(--primary);font-size:.9rem;width:16px}
-.field .hint{font-size:.72rem;color:var(--text-muted);margin-left:auto;font-weight:500}
-.input{
-  width:100%;padding:12px 16px;
-  border:1.5px solid var(--border);border-radius:14px;
-  background:var(--surface-2);color:var(--text);
-  font-family:'JetBrains Mono','Inter',monospace;
-  font-size:.95rem;font-weight:500;
-  transition:var(--tr);outline:none;
-}
-.input:focus{border-color:var(--primary);background:var(--surface);box-shadow:0 0 0 4px var(--primary-soft)}
-.input.error{border-color:var(--danger);box-shadow:0 0 0 4px var(--danger-soft)}
-
-.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.preset{
-  padding:5px 12px;border:1px solid var(--border);
-  background:var(--surface-2);color:var(--text-muted);
-  font-family:inherit;font-weight:600;font-size:.76rem;
-  border-radius:999px;cursor:pointer;transition:var(--tr);
-}
-.preset:hover{color:var(--primary);border-color:var(--primary);background:var(--primary-soft)}
-
-/* RESULT */
-.result{
-  margin-top:20px;padding:18px;border-radius:18px;
-  background:var(--surface-2);border:1px solid var(--border);
-  min-height:60px;
-}
-.result.empty{color:var(--text-muted);text-align:center;font-size:.9rem;display:grid;place-items:center;font-style:italic}
-.result.error{background:var(--danger-soft);border-color:rgba(239,68,68,.3);color:var(--danger);font-weight:500;font-size:.9rem;font-style:normal}
-.result-title{font-size:.76rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
-.res-row{
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  padding:12px 14px;background:var(--surface);border-radius:14px;margin-bottom:8px;
-  border-left:4px solid var(--primary);animation:fadeIn .3s ease;
-}
-.res-row:last-child{margin-bottom:0}
-.res-row.success{border-left-color:var(--success)}
-.res-row.warning{border-left-color:var(--warning)}
-.res-row.danger{border-left-color:var(--danger)}
-.res-row .label{font-size:.88rem;font-weight:500;color:var(--text)}
-.res-row .value{
-  font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;
-  color:var(--primary);padding:4px 12px;border-radius:10px;background:var(--primary-soft);
-}
-.res-row.success .value{background:var(--success-soft);color:var(--success)}
-.res-row.warning .value{background:var(--warning-soft);color:var(--warning)}
-.res-row.danger .value{background:var(--danger-soft);color:var(--danger)}
-.res-meta{
-  font-size:.78rem;color:var(--text-muted);margin-top:12px;padding-top:12px;
-  border-top:1px dashed var(--border);line-height:1.6;
-}
-.res-meta strong{color:var(--primary);font-family:'JetBrains Mono',monospace}
-.big-value{
-  display:flex;align-items:baseline;justify-content:center;gap:10px;
-  padding:20px;background:linear-gradient(135deg,var(--primary-soft),transparent);
-  border-radius:18px;margin-bottom:12px;
-}
-.big-value .num{
-  font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:800;line-height:1;
-  background:var(--primary-grad);-webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.big-value .unit{font-size:.9rem;color:var(--text-muted);font-weight:600}
-
-/* ===== GPA PANEL ===== */
-.gpa-toolbar{
-  display:flex;flex-wrap:wrap;gap:8px;
-  justify-content:space-between;align-items:center;
-  padding:10px 12px;margin-bottom:16px;
-  background:var(--surface-2);border:1px solid var(--border);border-radius:16px;
-}
-.gpa-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1;min-width:0}
-.gpa-sort{
-  width:auto;padding:8px 32px 8px 12px;
-  font-family:inherit;font-size:.8rem;font-weight:600;
-  cursor:pointer;
-  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
-  background-repeat:no-repeat;
-  background-position:right 10px center;
-  background-size:12px;
-  -webkit-appearance:none;appearance:none;
-}
-
-.subjects{display:flex;flex-direction:column;gap:8px}
-
-.subject-row{
-  display:grid;
-  grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,.7fr) 38px;
-  gap:8px;align-items:center;
-  padding:8px 10px;
-  background:var(--surface-2);
-  border:1px solid var(--border);
-  border-left:4px solid var(--border);
-  border-radius:14px;
-  transition:var(--tr);
-  animation:fadeIn .3s ease;
-}
-.subject-row:focus-within{
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px var(--primary-soft);
-}
-.subject-row.score-great{border-left-color:var(--success)}
-.subject-row.score-good {border-left-color:var(--primary)}
-.subject-row.score-ok   {border-left-color:var(--warning)}
-.subject-row.score-bad  {border-left-color:var(--danger)}
-
-.subject-row .input{
-  padding:9px 12px;font-size:.86rem;
-  background:var(--surface);
-}
-.subject-row .subj-name{font-family:'Inter',sans-serif;font-weight:500}
-.subject-row .subj-score,.subject-row .subj-weight{
-  text-align:center;font-family:'JetBrains Mono',monospace;font-weight:600;
-}
-
-.icon-btn-sm{
-  width:34px;height:34px;border-radius:10px;border:none;
-  background:transparent;color:var(--text-muted);
-  cursor:pointer;display:grid;place-items:center;font-size:13px;
-  transition:var(--tr);
-}
-.icon-btn-sm:hover{background:var(--danger-soft);color:var(--danger);transform:scale(1.05)}
-
-.add-row{
-  width:100%;padding:12px;margin-top:10px;
-  border:1.5px dashed var(--border-2);background:transparent;
-  color:var(--text-muted);border-radius:14px;
-  font-family:inherit;font-weight:600;font-size:.86rem;
-  cursor:pointer;transition:var(--tr);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.add-row:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft);border-style:solid}
-
-.gpa-empty{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:32px 20px;text-align:center;color:var(--text-muted);
-  background:var(--surface-2);border:1.5px dashed var(--border-2);border-radius:16px;
-}
-.gpa-empty i{font-size:38px;opacity:.35}
-.gpa-empty p{font-size:.86rem;margin:0}
-.gpa-empty .sm{font-size:.76rem;opacity:.8}
-
-/* HISTORY */
-.history-section{
-  margin-top:24px;background:var(--surface);border:1px solid var(--border);
-  border-radius:24px;padding:24px;box-shadow:var(--shadow);
-}
-.history-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.history-head h2{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:10px}
-.history-head h2 i{color:var(--primary)}
-.history-head .search{flex:1;min-width:180px;max-width:300px;position:relative}
-.history-head .search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
-.history-head .search input{
-  width:100%;padding:9px 14px 9px 38px;
-  border:1.5px solid var(--border);border-radius:999px;
-  background:var(--surface-2);color:var(--text);
-  font-family:inherit;font-size:.85rem;outline:none;transition:var(--tr);
-}
-.history-head .search input:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
-.history-list{display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto}
-.history-list::-webkit-scrollbar{width:6px}
-.history-list::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
-.history-item{
-  background:var(--surface-2);border:1px solid var(--border);
-  border-radius:14px;padding:14px 16px;transition:var(--tr);animation:fadeIn .3s ease;
-}
-.history-item:hover{border-color:var(--border-2);box-shadow:var(--shadow);transform:translateY(-1px)}
-.history-item .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
-.history-item .mode{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:3px 10px;border-radius:999px;
-  background:var(--primary-soft);color:var(--primary);
-  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-}
-.history-item .time{font-size:.72rem;color:var(--text-muted);font-weight:500}
-.history-item .content{font-size:.86rem;color:var(--text);line-height:1.6}
-.history-item .content strong{font-family:'JetBrains Mono',monospace;color:var(--primary)}
-.history-item .actions{display:flex;gap:4px}
-.history-item .actions button{
-  width:28px;height:28px;border-radius:8px;border:none;
-  background:transparent;color:var(--text-muted);
-  cursor:pointer;display:grid;place-items:center;font-size:12px;transition:var(--tr);
-}
-.history-item .actions button:hover{background:var(--primary-soft);color:var(--primary)}
-.history-item .actions button.del:hover{background:var(--danger-soft);color:var(--danger)}
-.empty-history{text-align:center;padding:40px 20px;color:var(--text-muted)}
-.empty-history i{font-size:36px;opacity:.3;margin-bottom:12px;display:block}
-
-/* BUTTONS */
-.btn{
-  padding:10px 18px;border:1.5px solid var(--border);
-  border-radius:12px;background:var(--surface);color:var(--text);
-  font-family:inherit;font-weight:600;font-size:.85rem;
-  cursor:pointer;transition:var(--tr);
-  display:inline-flex;align-items:center;gap:8px;
-}
-.btn:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-1px)}
-.btn-primary{background:var(--primary-grad);color:#fff;border-color:transparent;box-shadow:0 6px 16px -6px rgba(99,102,241,.5)}
-.btn-primary:hover{color:#fff;box-shadow:0 10px 20px -6px rgba(99,102,241,.7)}
-.btn-danger{color:var(--danger);border-color:rgba(239,68,68,.3)}
-.btn-danger:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
-
-/* TOAST */
-.toast{
-  position:fixed;bottom:24px;left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:var(--text);color:var(--surface);
-  padding:12px 22px;border-radius:999px;
-  font-size:.85rem;font-weight:600;
-  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
-  transition:all .3s;z-index:1000;max-width:90vw;text-align:center;
-}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.error{background:var(--danger);color:#fff}
-
-/* RESPONSIVE */
-@media (max-width:640px){
-  body{padding:16px 12px 40px}
-  .panel,.history-section{padding:18px;border-radius:20px}
-  .brand h1{font-size:1.15rem}
-  .brand p{font-size:.72rem}
-  .brand-logo{width:44px;height:44px;font-size:18px;border-radius:13px}
-  .tab-btn{padding:8px 14px;font-size:.8rem}
-  .tab-btn i{display:none}
-  .big-value .num{font-size:2.4rem}
-  .res-row{flex-wrap:wrap;padding:10px 12px}
-  .res-row .label{font-size:.82rem}
-  .res-row .value{font-size:.95rem;padding:3px 10px}
-  .gpa-toolbar{padding:8px 10px}
-  .subject-row{
-    grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr) minmax(0,.7fr) 34px;
-    gap:6px;padding:7px 8px;
-  }
-  .subject-row .input{padding:8px 10px;font-size:.8rem}
-  .subject-row .subj-weight{padding:8px 4px}
-  .history-head{align-items:stretch}
-  .history-head .search{max-width:none}
-  .scale-switch button{padding:6px 12px;font-size:.75rem}
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
-}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -386,6 +28,9 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
   <option value="Âm nhạc">
   <option value="Mỹ thuật">
 </datalist>
+
+<!-- Back to Hub Navigation -->
+<a href="../index.html" class="hub-pill" title="Quay lại Master Hub"><i class="fas fa-arrow-left"></i> <span>Hub</span></a>
 
 <div class="app">
 
@@ -414,6 +59,7 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
     <button class="tab-btn" data-panel="panel-tb"><i class="fas fa-chart-simple"></i> Điểm TB môn</button>
     <button class="tab-btn" data-panel="panel-nam"><i class="fas fa-calendar-days"></i> Cả năm</button>
     <button class="tab-btn" data-panel="panel-gpa"><i class="fas fa-layer-group"></i> GPA nhiều môn</button>
+    <button class="tab-btn" data-panel="panel-thpt"><i class="fas fa-award"></i> Tốt nghiệp & Đại học</button>
   </nav>
 
   <main>
@@ -535,6 +181,8 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
             <option value="name">Tên A → Z</option>
           </select>
         </div>
+        
+          <button class="btn" id="gpa-print" title="In hoặc lưu PDF bảng điểm"><i class="fas fa-print"></i> In bảng điểm</button>
         <button class="btn btn-danger" id="gpa-clear" title="Xóa toàn bộ môn"><i class="fas fa-trash"></i></button>
       </div>
 
@@ -548,6 +196,111 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
         </div>
       </div>
     </section>
+  
+    <!-- PANEL THPT & ĐẠI HỌC -->
+    <section class="panel" id="panel-thpt" hidden>
+      <div class="panel-title"><i class="fas fa-award"></i> Xét Tốt Nghiệp THPT & Xét Tuyển Đại Học</div>
+      <p class="panel-hint">Tính điểm xét tốt nghiệp chuẩn Bộ GD&ĐT & tổ hợp xét tuyển đại học kèm điểm ưu tiên mới nhất.</p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:20px;">
+        <!-- Card 1: Tốt nghiệp THPT -->
+        <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:18px; padding:18px;">
+          <h3 style="font-size:0.95rem; margin-bottom:12px; color:var(--primary); display:flex; align-items:center; gap:8px;">
+            <i class="fas fa-graduation-cap"></i> Xét Tốt Nghiệp THPT
+          </h3>
+          <div class="field">
+            <label>Toán <span class="hint">0 - 10</span></label>
+            <input type="number" step="0.05" class="input" id="thpt-toan" placeholder="VD: 8.2">
+          </div>
+          <div class="field">
+            <label>Ngữ Văn <span class="hint">0 - 10</span></label>
+            <input type="number" step="0.05" class="input" id="thpt-van" placeholder="VD: 7.75">
+          </div>
+          <div class="field">
+            <label>Ngoại Ngữ <span class="hint">0 - 10</span></label>
+            <input type="number" step="0.05" class="input" id="thpt-anh" placeholder="VD: 8.6">
+          </div>
+          <div class="field">
+            <label>Bài thi Tổ Hợp (KHTN / KHXH) <span class="hint">Điểm TB 3 môn tổ hợp</span></label>
+            <input type="number" step="0.05" class="input" id="thpt-tohop" placeholder="VD: 7.5">
+          </div>
+          <div class="field">
+            <label>Điểm TB Lớp 12 <span class="hint">Học bạ</span></label>
+            <input type="number" step="0.05" class="input" id="thpt-tb12" placeholder="VD: 8.4">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="field">
+              <label>Khuyến khích</label>
+              <input type="number" step="0.5" class="input" id="thpt-kk" placeholder="0 - 4.0">
+            </div>
+            <div class="field">
+              <label>Điểm Ưu tiên</label>
+              <input type="number" step="0.25" class="input" id="thpt-ut" placeholder="0 - 2.0">
+            </div>
+          </div>
+          <button class="btn btn-primary" id="btn-calc-thpt" style="width:100%; justify-content:center; margin-top:8px;">
+            <i class="fas fa-calculator"></i> Tính Điểm Tốt Nghiệp
+          </button>
+          <div class="result empty" id="result-thpt" style="margin-top:14px;">Nhập điểm để xem kết quả tốt nghiệp</div>
+        </div>
+
+        <!-- Card 2: Xét Tuyển Đại Học -->
+        <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:18px; padding:18px;">
+          <h3 style="font-size:0.95rem; margin-bottom:12px; color:var(--primary); display:flex; align-items:center; gap:8px;">
+            <i class="fas fa-university"></i> Xét Tuyển Đại Học (Khối thi)
+          </h3>
+          <div class="field">
+            <label>Khối xét tuyển</label>
+            <select class="input" id="dh-khoi">
+              <option value="A00">A00: Toán - Vật Lý - Hóa Học</option>
+              <option value="A01">A01: Toán - Vật Lý - Tiếng Anh</option>
+              <option value="B00">B00: Toán - Hóa Học - Sinh Học</option>
+              <option value="C00">C00: Ngữ Văn - Lịch Sử - Địa Lý</option>
+              <option value="D01" selected>D01: Toán - Ngữ Văn - Tiếng Anh</option>
+              <option value="D07">D07: Toán - Hóa Học - Tiếng Anh</option>
+            </select>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <div class="field">
+              <label id="lbl-m1">Môn 1</label>
+              <input type="number" step="0.1" class="input" id="dh-m1" placeholder="8.0">
+            </div>
+            <div class="field">
+              <label id="lbl-m2">Môn 2</label>
+              <input type="number" step="0.1" class="input" id="dh-m2" placeholder="8.5">
+            </div>
+            <div class="field">
+              <label id="lbl-m3">Môn 3</label>
+              <input type="number" step="0.1" class="input" id="dh-m3" placeholder="9.0">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="field">
+              <label>Khu vực</label>
+              <select class="input" id="dh-kv">
+                <option value="0.75">KV1 (+0.75)</option>
+                <option value="0.5">KV2-NT (+0.5)</option>
+                <option value="0.25">KV2 (+0.25)</option>
+                <option value="0" selected>KV3 (0 điểm)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Đối tượng</label>
+              <select class="input" id="dh-dt">
+                <option value="0" selected>Không ưu tiên (0)</option>
+                <option value="2.0">Nhóm ƯT1 (+2.0)</option>
+                <option value="1.0">Nhóm ƯT2 (+1.0)</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="btn-calc-dh" style="width:100%; justify-content:center; margin-top:8px;">
+            <i class="fas fa-chart-line"></i> Tính Tổng Điểm Đại Học
+          </button>
+          <div class="result empty" id="result-dh" style="margin-top:14px;">Nhập điểm để xem tổng điểm xét tuyển</div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <section class="history-section">
@@ -570,742 +323,9 @@ body.dark .theme-toggle .thumb{transform:translateX(28px)}
 
 <div class="toast" id="toast"></div>
 
-<script>
-(function(){
-'use strict';
 
-/* ========== STATE ========== */
-const LS = { history:'sgc_v2_history', dark:'sgc_v2_dark', gpa:'sgc_v2_gpa', scale:'sgc_v2_scale' };
-const state = {
-  scale: parseInt(localStorage.getItem(LS.scale)) || 10,
-  darkMode: localStorage.getItem(LS.dark) === '1',
-  history: safeJSON(localStorage.getItem(LS.history), []),
-  gpaSubjects: safeJSON(localStorage.getItem(LS.gpa), []),
-  searchTerm: ''
-};
-
-// Fix NaN sau JSON roundtrip (null → NaN để logic nhất quán)
-state.gpaSubjects = state.gpaSubjects.map(s => ({
-  name: s && typeof s.name === 'string' ? s.name : '',
-  score: s && (s.score === null || s.score === undefined) ? NaN : Number(s.score),
-  weight: s && Number.isFinite(Number(s.weight)) && Number(s.weight) > 0 ? Number(s.weight) : 1
-}));
-
-const PANEL_RESULT = {
-  'panel-hk2':'result-hk2',
-  'panel-ck':'result-ck',
-  'panel-tb':'result-tb',
-  'panel-nam':'result-nam',
-  'panel-gpa':'result-gpa'
-};
-
-/* ========== UTILS ========== */
-const $ = id => document.getElementById(id);
-const $$ = sel => document.querySelectorAll(sel);
-
-function safeJSON(s, fallback){ try{ return s ? JSON.parse(s) : fallback; }catch(e){ return fallback; } }
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-function roundScore(n){
-  if (!isFinite(n)) return n;
-  if (state.scale === 100) return Math.round(n);
-  return Math.round((n + 1e-9) * 10) / 10;
-}
-function fmt(n){
-  if (!isFinite(n)) return '—';
-  if (state.scale === 100) return Math.round(n).toString();
-  return roundScore(n).toFixed(1);
-}
-function parseOne(str){
-  if (str === null || str === undefined) return NaN;
-  const s = String(str);
-  if (!s.trim()) return NaN;
-  return parseFloat(s.trim().replace(/,/g, '.'));
-}
-function parseNumbers(str){
-  if (!str || !str.trim()) return [];
-  return str.trim().split(/\s+/).map(s => {
-    const n = parseFloat(s.replace(/,/g, '.'));
-    return isNaN(n) ? null : n;
-  }).filter(n => n !== null);
-}
-function isValidScore(n){ return !isNaN(n) && n >= 0 && n <= state.scale; }
-function debounce(fn, ms){
-  let t; return function(...a){ clearTimeout(t); t = setTimeout(() => fn.apply(this, a), ms); };
-}
-
-function toast(msg, type){
-  const t = $('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type === 'error' ? ' error' : '');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
-}
-function showEmpty(el, msg){
-  el.className = 'result empty';
-  el.textContent = msg;
-}
-function showError(el, msg){
-  el.className = 'result error';
-  el.innerHTML = '<i class="fas fa-triangle-exclamation"></i> ' + escapeHtml(msg);
-}
-function classify(needed){
-  if (needed <= 0) return 'success';
-  if (needed <= state.scale * 0.6) return 'success';
-  if (needed <= state.scale * 0.85) return 'warning';
-  if (needed <= state.scale) return 'warning';
-  return 'danger';
-}
-function scoreClass(score){
-  if (!isValidScore(score)) return '';
-  const pct = score / state.scale;
-  if (pct >= 0.8) return 'score-great';
-  if (pct >= 0.65) return 'score-good';
-  if (pct >= 0.5) return 'score-ok';
-  return 'score-bad';
-}
-
-/* ========== THEME / SCALE ========== */
-function applyTheme(){
-  document.body.classList.toggle('dark', state.darkMode);
-  $('themeIcon').className = state.darkMode ? 'fas fa-moon' : 'fas fa-sun';
-}
-$('themeToggle').addEventListener('click', () => {
-  state.darkMode = !state.darkMode;
-  localStorage.setItem(LS.dark, state.darkMode ? '1' : '0');
-  applyTheme();
-});
-
-function applyScale(){
-  $$('.scale-switch button').forEach(b => {
-    b.classList.toggle('active', parseInt(b.dataset.scale) === state.scale);
-  });
-  $$('.scale-max').forEach(el => el.textContent = state.scale);
-}
-$$('.scale-switch button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const sc = parseInt(btn.dataset.scale);
-    if (sc === state.scale) return;
-    state.scale = sc;
-    localStorage.setItem(LS.scale, sc);
-    applyScale();
-    computeAll();
-  });
-});
-
-/* ========== TABS ========== */
-$$('.tab-btn').forEach(tab => {
-  tab.addEventListener('click', () => {
-    $$('.tab-btn').forEach(t => t.classList.toggle('active', t === tab));
-    $$('.panel').forEach(p => p.hidden = p.id !== tab.dataset.panel);
-  });
-});
-
-/* ========== PRESETS ========== */
-$$('.preset').forEach(p => {
-  p.addEventListener('click', () => {
-    const input = $(p.closest('.presets').dataset.for);
-    const val = p.dataset.target;
-    const parts = input.value.trim().split(/\s+/).filter(Boolean);
-    if (!parts.includes(val)){
-      parts.push(val);
-      input.value = parts.join(' ');
-      computeAll();
-    } else {
-      toast('Mục tiêu đã có trong danh sách');
-    }
-  });
-});
-
-/* ========== PANEL 1: HK2 cần ========== */
-function calcHK2(){
-  const hk1El = $('hk1');
-  const hk1 = parseOne(hk1El.value);
-  const result = $('result-hk2');
-
-  if (!hk1El.value.trim()){
-    showEmpty(result, 'Nhập điểm HK1 để bắt đầu');
-    hk1El.classList.remove('error'); return;
-  }
-  if (!isValidScore(hk1)){
-    showError(result, `HK1 phải từ 0 đến ${state.scale}`);
-    hk1El.classList.add('error'); return;
-  }
-  hk1El.classList.remove('error');
-
-  const targets = parseNumbers($('targets-hk2').value).filter(t => isValidScore(t));
-  if (!targets.length){ showEmpty(result, 'Nhập ít nhất 1 mục tiêu'); return; }
-
-  let html = '<div class="result-title">Kết quả</div>';
-  targets.forEach(t => {
-    const needed = (3 * t - hk1) / 2;
-    const cls = classify(needed);
-    if (needed > state.scale){
-      const maxCN = (hk1 + 2 * state.scale) / 3;
-      html += `
-        <div class="res-row danger">
-          <span class="label">ĐTBCN ≥ ${fmt(t)}</span>
-          <span class="value"><i class="fas fa-xmark"></i> Không khả thi</span>
-        </div>
-        <div class="res-meta">HK2 tối đa <strong>${state.scale}</strong> → ĐTBCN tối đa = <strong>${fmt(maxCN)}</strong> (thiếu <strong>${fmt(t - maxCN)}</strong>)</div>
-      `;
-    } else {
-      html += `
-        <div class="res-row ${cls}">
-          <span class="label">ĐTBCN ≥ ${fmt(t)}</span>
-          <span class="value">${fmt(Math.max(0, needed))}</span>
-        </div>
-      `;
-    }
-  });
-  html += `<div class="res-meta">Công thức: HK2 = (3 × Mục tiêu − HK1) / 2</div>`;
-  result.className = 'result';
-  result.innerHTML = html;
-}
-
-/* ========== PANEL 2: Cuối kỳ cần ========== */
-function calcCK(){
-  const txEl = $('tx-ck'), gkEl = $('gk-ck');
-  const result = $('result-ck');
-  const txArr = parseNumbers(txEl.value);
-  const gk = parseOne(gkEl.value);
-
-  if (!txEl.value.trim() || !gkEl.value.trim()){ showEmpty(result, 'Nhập điểm TX và giữa kỳ'); return; }
-  if (txArr.some(v => !isValidScore(v))){ showError(result, `Điểm TX phải từ 0 đến ${state.scale}`); return; }
-  if (!isValidScore(gk)){ showError(result, `Điểm giữa kỳ phải từ 0 đến ${state.scale}`); return; }
-
-  const targets = parseNumbers($('targets-ck').value).filter(t => isValidScore(t));
-  if (!targets.length){ showEmpty(result, 'Nhập ít nhất 1 mục tiêu ĐTB HK2'); return; }
-
-  const sumTx = txArr.reduce((a,b) => a+b, 0);
-  const n = txArr.length;
-
-  let html = '<div class="result-title">Kết quả</div>';
-  targets.forEach(t => {
-    const needed = (t * (n + 5) - sumTx - 2 * gk) / 3;
-    const cls = classify(needed);
-    if (needed > state.scale){
-      const maxDTB = (sumTx + 2 * gk + 3 * state.scale) / (n + 5);
-      html += `
-        <div class="res-row danger">
-          <span class="label">ĐTBHK2 ≥ ${fmt(t)}</span>
-          <span class="value"><i class="fas fa-xmark"></i> Không khả thi</span>
-        </div>
-        <div class="res-meta">Nếu CK = ${state.scale}, ĐTBHK2 tối đa = <strong>${fmt(maxDTB)}</strong> (thiếu <strong>${fmt(t - maxDTB)}</strong>)</div>
-      `;
-    } else {
-      html += `
-        <div class="res-row ${cls}">
-          <span class="label">ĐTBHK2 ≥ ${fmt(t)}</span>
-          <span class="value">${fmt(Math.max(0, needed))}</span>
-        </div>
-      `;
-    }
-  });
-  html += `<div class="res-meta">Công thức: CK = (ĐTB × (n+5) − ΣTX − 2×GK) / 3 · n = ${n}</div>`;
-  result.className = 'result';
-  result.innerHTML = html;
-}
-
-/* ========== PANEL 3: Điểm TB môn ========== */
-function calcTB(){
-  const txArr = parseNumbers($('tx-tb').value);
-  const gk = parseOne($('gk-tb').value);
-  const ck = parseOne($('ck-tb').value);
-  const result = $('result-tb');
-
-  if (!txArr.length && isNaN(gk) && isNaN(ck)){ showEmpty(result, 'Nhập điểm để tính ĐTB môn'); return; }
-  if (!txArr.length){ showError(result, 'Cần nhập ít nhất 1 điểm thường xuyên'); return; }
-  if (txArr.some(v => !isValidScore(v))){ showError(result, `Điểm TX phải từ 0 đến ${state.scale}`); return; }
-  if (isNaN(gk) || isNaN(ck)){ showError(result, 'Cần nhập đủ giữa kỳ và cuối kỳ'); return; }
-  if (!isValidScore(gk) || !isValidScore(ck)){ showError(result, `Điểm phải từ 0 đến ${state.scale}`); return; }
-
-  const sumTx = txArr.reduce((a,b) => a+b, 0);
-  const n = txArr.length;
-  const dtb = (sumTx + 2*gk + 3*ck) / (n + 5);
-
-  let rank = '';
-  const r1 = state.scale === 10 ? 8 : 80;
-  const r2 = state.scale === 10 ? 6.5 : 65;
-  const r3 = state.scale === 10 ? 5 : 50;
-  if (dtb >= r1) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
-  else if (dtb >= r2) rank = '👍 Xếp loại <strong>Khá</strong>';
-  else if (dtb >= r3) rank = '📚 Xếp loại <strong>Trung bình</strong>';
-  else rank = '⚠️ Xếp loại dưới trung bình';
-
-  result.className = 'result';
-  result.innerHTML = `
-    <div class="big-value">
-      <span class="num">${fmt(dtb)}</span>
-      <span class="unit">/ ${state.scale}</span>
-    </div>
-    <div class="res-row"><span class="label">ΣTX (${n} điểm)</span><span class="value">${fmt(sumTx)}</span></div>
-    <div class="res-row"><span class="label">Giữa kỳ (×2)</span><span class="value">${fmt(gk)}</span></div>
-    <div class="res-row"><span class="label">Cuối kỳ (×3)</span><span class="value">${fmt(ck)}</span></div>
-    <div class="res-meta">
-      Công thức: (ΣTX + 2×GK + 3×CK) / (n + 5) = (${fmt(sumTx)} + ${fmt(2*gk)} + ${fmt(3*ck)}) / ${n+5}<br>
-      ${rank}
-    </div>
-  `;
-}
-
-/* ========== PANEL 4: Cả năm ========== */
-function calcNam(){
-  const hk1 = parseOne($('hk1-nam').value);
-  const hk2 = parseOne($('hk2-nam').value);
-  const target = parseOne($('target-nam').value);
-  const result = $('result-nam');
-
-  if (isNaN(hk1)){ showEmpty(result, 'Nhập điểm HK1 để bắt đầu'); return; }
-  if (!isValidScore(hk1)){ showError(result, `HK1 phải từ 0 đến ${state.scale}`); return; }
-
-  // Case 1: HK1 + target (không có HK2) → HK2 cần
-  if (isNaN(hk2) && !isNaN(target)){
-    if (!isValidScore(target)){ showError(result, `Mục tiêu phải từ 0 đến ${state.scale}`); return; }
-    const needed = (3 * target - hk1) / 2;
-    const cls = classify(needed);
-    let html = '<div class="result-title">HK2 cần</div>';
-    if (needed > state.scale){
-      const maxCN = (hk1 + 2 * state.scale) / 3;
-      html += `
-        <div class="res-row danger">
-          <span class="label">ĐTBCN ≥ ${fmt(target)}</span>
-          <span class="value"><i class="fas fa-xmark"></i> Không khả thi</span>
-        </div>
-        <div class="res-meta">HK2 tối đa <strong>${state.scale}</strong> → ĐTBCN tối đa = <strong>${fmt(maxCN)}</strong></div>
-      `;
-    } else {
-      html += `
-        <div class="res-row ${cls}">
-          <span class="label">ĐTBCN ≥ ${fmt(target)} → HK2 cần</span>
-          <span class="value">${fmt(Math.max(0, needed))}</span>
-        </div>
-      `;
-    }
-    html += `<div class="res-meta">Công thức: HK2 = (3 × ${fmt(target)} − ${fmt(hk1)}) / 2</div>`;
-    result.className = 'result';
-    result.innerHTML = html;
-    return;
-  }
-
-  // Case 2: có HK1 + HK2 → ĐTBCN
-  if (!isNaN(hk2)){
-    if (!isValidScore(hk2)){ showError(result, `HK2 phải từ 0 đến ${state.scale}`); return; }
-    const dtbcn = (hk1 + 2 * hk2) / 3;
-    const r1 = state.scale === 10 ? 8 : 80;
-    const r2 = state.scale === 10 ? 6.5 : 65;
-    const r3 = state.scale === 10 ? 5 : 50;
-    let rank = '';
-    if (dtbcn >= r1) rank = '🎉 Xếp loại <strong>Giỏi</strong>';
-    else if (dtbcn >= r2) rank = '👍 Xếp loại <strong>Khá</strong>';
-    else if (dtbcn >= r3) rank = '📚 Xếp loại <strong>Trung bình</strong>';
-    else rank = '⚠️ Xếp loại dưới trung bình';
-
-    result.className = 'result';
-    result.innerHTML = `
-      <div class="big-value">
-        <span class="num">${fmt(dtbcn)}</span>
-        <span class="unit">/ ${state.scale}</span>
-      </div>
-      <div class="res-row"><span class="label">HK1</span><span class="value">${fmt(hk1)}</span></div>
-      <div class="res-row"><span class="label">HK2 (×2)</span><span class="value">${fmt(hk2)}</span></div>
-      <div class="res-meta">
-        Công thức: (HK1 + 2×HK2) / 3 = (${fmt(hk1)} + ${fmt(2*hk2)}) / 3<br>
-        ${rank}
-      </div>
-    `;
-    return;
-  }
-
-  showEmpty(result, 'Nhập HK2 hoặc mục tiêu để tính tiếp');
-}
-
-/* ========== PANEL 5: GPA (FIXED & UPGRADED) ========== */
-
-// Render danh sách môn từ state
-function renderSubjects(){
-  const wrap = $('gpa-subjects');
-  if (!state.gpaSubjects.length){
-    wrap.innerHTML = '';
-    return;
-  }
-  wrap.innerHTML = state.gpaSubjects.map((s, i) => {
-    const scoreVal = Number.isFinite(s.score) ? s.score : '';
-    const cls = scoreClass(s.score);
-    const name = escapeHtml(s.name || '');
-    return `
-      <div class="subject-row ${cls}" data-idx="${i}">
-        <input type="text" class="input subj-name" list="subject-names"
-               placeholder="Tên môn" value="${name}" autocomplete="off">
-        <input type="text" class="input subj-score" inputmode="decimal"
-               placeholder="Điểm" value="${scoreVal}" autocomplete="off">
-        <input type="text" class="input subj-weight" inputmode="decimal"
-               placeholder="HS" value="${s.weight || 1}" title="Hệ số tín chỉ" autocomplete="off">
-        <button class="icon-btn-sm subj-del" title="Xóa môn"><i class="fas fa-times"></i></button>
-      </div>
-    `;
-  }).join('');
-}
-
-// Đọc dữ liệu từ DOM → state
-function syncSubjectsFromDOM(){
-  const rows = $$('#gpa-subjects .subject-row');
-  state.gpaSubjects = Array.from(rows).map(row => ({
-    name: row.querySelector('.subj-name').value.trim(),
-    score: parseOne(row.querySelector('.subj-score').value),
-    weight: parseOne(row.querySelector('.subj-weight').value) || 1
-  }));
-}
-
-// Cập nhật màu viền theo điểm (không re-render để giữ focus)
-function updateRowClasses(){
-  $$('#gpa-subjects .subject-row').forEach(row => {
-    row.classList.remove('score-great','score-good','score-ok','score-bad');
-    const score = parseOne(row.querySelector('.subj-score').value);
-    const cls = scoreClass(score);
-    if (cls) row.classList.add(cls);
-  });
-}
-
-// Ghi localStorage (debounced)
-const persistGPA = debounce(() => {
-  // Chuyển NaN → null để JSON hợp lệ
-  const safe = state.gpaSubjects.map(s => ({
-    name: s.name,
-    score: Number.isFinite(s.score) ? s.score : null,
-    weight: s.weight
-  }));
-  localStorage.setItem(LS.gpa, JSON.stringify(safe));
-}, 250);
-
-// Tính GPA
-function calcGPA(){
-  const result = $('result-gpa');
-  const valid = state.gpaSubjects.filter(s => isValidScore(s.score) && s.weight > 0);
-
-  if (!valid.length){
-    result.className = 'result empty';
-    result.innerHTML = `
-      <div class="gpa-empty">
-        <i class="fas fa-graduation-cap"></i>
-        <p>Chưa có môn nào hợp lệ</p>
-        <p class="sm">Bấm <strong>+ Thêm môn</strong> hoặc <strong>Mẫu</strong> để bắt đầu</p>
-      </div>
-    `;
-    return;
-  }
-
-  let sumScore = 0, sumWeight = 0;
-  valid.forEach(s => { sumScore += s.score * s.weight; sumWeight += s.weight; });
-  const gpa = sumScore / sumWeight;
-
-  let maxSub = valid[0], minSub = valid[0];
-  valid.forEach(s => {
-    if (s.score > maxSub.score) maxSub = s;
-    if (s.score < minSub.score) minSub = s;
-  });
-
-  const r1 = state.scale === 10 ? 8 : 80;
-  const r2 = state.scale === 10 ? 6.5 : 65;
-  const r3 = state.scale === 10 ? 5 : 50;
-  let rank = '';
-  if (gpa >= r1) rank = '🎉 GPA đạt loại <strong>Giỏi</strong>';
-  else if (gpa >= r2) rank = '👍 GPA đạt loại <strong>Khá</strong>';
-  else if (gpa >= r3) rank = '📚 GPA đạt loại <strong>Trung bình</strong>';
-  else rank = '⚠️ GPA dưới trung bình';
-
-  result.className = 'result';
-  result.innerHTML = `
-    <div class="big-value">
-      <span class="num">${fmt(gpa)}</span>
-      <span class="unit">/ ${state.scale}</span>
-    </div>
-    <div class="res-row success">
-      <span class="label">Tổng môn tính</span>
-      <span class="value">${valid.length} / ${state.gpaSubjects.length}</span>
-    </div>
-    <div class="res-row success">
-      <span class="label"><i class="fas fa-arrow-up"></i> Cao nhất</span>
-      <span class="value">${fmt(maxSub.score)}</span>
-    </div>
-    <div class="res-row danger">
-      <span class="label"><i class="fas fa-arrow-down"></i> Thấp nhất</span>
-      <span class="value">${fmt(minSub.score)}</span>
-    </div>
-    <div class="res-meta">
-      Tổng hệ số: <strong>${sumWeight.toFixed(sumWeight % 1 ? 1 : 0)}</strong> · ${rank}
-    </div>
-  `;
-}
-
-/* --- GPA interactions --- */
-
-// ✅ FIX: sync trước khi push
-$('gpa-add').addEventListener('click', () => {
-  syncSubjectsFromDOM();
-  state.gpaSubjects.push({ name: '', score: NaN, weight: 1 });
-  persistGPA();
-  renderSubjects();
-  calcGPA();
-  const rows = $$('#gpa-subjects .subject-row');
-  if (rows.length){
-    rows[rows.length - 1].querySelector('.subj-name').focus();
-  }
-});
-
-// Mẫu
-const SAMPLE_SUBJECTS = [
-  { name: 'Toán',      score: 8.0, weight: 2 },
-  { name: 'Ngữ văn',   score: 7.5, weight: 2 },
-  { name: 'Tiếng Anh', score: 9.0, weight: 1 },
-  { name: 'Vật lý',    score: 7.0, weight: 1 },
-  { name: 'Hóa học',   score: 8.5, weight: 1 }
-];
-$('gpa-sample').addEventListener('click', () => {
-  if (state.gpaSubjects.length && !confirm('Ghi đè danh sách hiện tại bằng dữ liệu mẫu?')) return;
-  state.gpaSubjects = SAMPLE_SUBJECTS.map(s => ({ ...s }));
-  persistGPA();
-  renderSubjects();
-  calcGPA();
-  toast('Đã điền dữ liệu mẫu');
-});
-
-// Xóa hết
-$('gpa-clear').addEventListener('click', () => {
-  if (!state.gpaSubjects.length) return toast('Danh sách đã trống');
-  if (!confirm('Xóa toàn bộ môn trong danh sách?')) return;
-  state.gpaSubjects = [];
-  persistGPA();
-  renderSubjects();
-  calcGPA();
-  toast('Đã xóa toàn bộ môn');
-});
-
-// Sắp xếp
-$('gpa-sort').addEventListener('change', e => {
-  const mode = e.target.value;
-  if (mode === 'none') return;
-  syncSubjectsFromDOM();
-  const copy = state.gpaSubjects.slice();
-  if (mode === 'score-desc'){
-    copy.sort((a,b) => (Number.isFinite(b.score) ? b.score : -1) - (Number.isFinite(a.score) ? a.score : -1));
-  } else if (mode === 'score-asc'){
-    copy.sort((a,b) => (Number.isFinite(a.score) ? a.score : state.scale + 1) - (Number.isFinite(b.score) ? b.score : state.scale + 1));
-  } else if (mode === 'name'){
-    copy.sort((a,b) => (a.name || '').localeCompare(b.name || '', 'vi'));
-  }
-  state.gpaSubjects = copy;
-  persistGPA();
-  renderSubjects();
-  calcGPA();
-  toast('Đã sắp xếp');
-});
-
-// Delegated: input → sync + class + calc
-$('gpa-subjects').addEventListener('input', () => {
-  syncSubjectsFromDOM();
-  updateRowClasses();
-  persistGPA();
-  calcGPA();
-});
-
-// Delegated: xóa môn
-$('gpa-subjects').addEventListener('click', e => {
-  const btn = e.target.closest('.subj-del');
-  if (!btn) return;
-  const row = btn.closest('.subject-row');
-  const idx = parseInt(row.dataset.idx, 10);
-  syncSubjectsFromDOM();
-  state.gpaSubjects.splice(idx, 1);
-  persistGPA();
-  renderSubjects();
-  calcGPA();
-  toast('Đã xóa môn');
-});
-
-// Enter → nhảy ô tiếp theo trong row, hoặc tạo row mới nếu ở ô cuối
-$('gpa-subjects').addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const row = e.target.closest('.subject-row');
-  if (!row) return;
-  e.preventDefault();
-  const fields = row.querySelectorAll('input');
-  const curIdx = Array.from(fields).indexOf(e.target);
-  if (curIdx < fields.length - 1){
-    fields[curIdx + 1].focus();
-    fields[curIdx + 1].select?.();
-  } else {
-    // Ở ô cuối cùng → thêm môn mới
-    syncSubjectsFromDOM();
-    state.gpaSubjects.push({ name: '', score: NaN, weight: 1 });
-    persistGPA();
-    renderSubjects();
-    calcGPA();
-    const rows = $$('#gpa-subjects .subject-row');
-    rows[rows.length - 1].querySelector('.subj-name').focus();
-  }
-});
-
-/* ========== COMPUTE ALL ========== */
-function computeAll(){
-  calcHK2();
-  calcCK();
-  calcTB();
-  calcNam();
-  calcGPA();
-}
-
-/* ========== REAL-TIME INPUT ========== */
-['hk1','targets-hk2','tx-ck','gk-ck','targets-ck','tx-tb','gk-tb','ck-tb','hk1-nam','hk2-nam','target-nam']
-  .forEach(id => {
-    const el = $(id);
-    if (el) el.addEventListener('input', computeAll);
-  });
-
-/* ========== HISTORY ========== */
-function saveHistoryToStorage(){ localStorage.setItem(LS.history, JSON.stringify(state.history)); }
-
-function getCurrentResult(){
-  const activeTab = document.querySelector('.tab-btn.active');
-  if (!activeTab) return null;
-  const resultEl = $(PANEL_RESULT[activeTab.dataset.panel]);
-  if (!resultEl) return null;
-  if (resultEl.classList.contains('empty') || resultEl.classList.contains('error')) return null;
-  return { mode: activeTab.textContent.trim(), html: resultEl.innerHTML };
-}
-
-function renderHistory(){
-  const list = $('history-list');
-  const term = state.searchTerm.toLowerCase().trim();
-  let items = state.history.slice();
-  if (term){
-    items = items.filter(it =>
-      it.mode.toLowerCase().includes(term) ||
-      it.content.toLowerCase().includes(term)
-    );
-  }
-  if (!items.length){
-    list.innerHTML = `<div class="empty-history">
-      <i class="fas fa-inbox"></i>
-      <p>${term ? 'Không tìm thấy kết quả phù hợp' : 'Chưa có kết quả nào được lưu'}</p>
-    </div>`;
-    return;
-  }
-  list.innerHTML = items.map(it => `
-    <div class="history-item" data-id="${it.id}">
-      <div class="top">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span class="mode">${escapeHtml(it.mode)}</span>
-          <span class="time"><i class="far fa-clock"></i> ${escapeHtml(it.time)}</span>
-        </div>
-        <div class="actions">
-          <button class="restore" title="Khôi phục"><i class="fas fa-rotate-left"></i></button>
-          <button class="del" title="Xóa"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>
-      <div class="content">${it.content}</div>
-    </div>
-  `).join('');
-}
-
-$('history-list').addEventListener('click', e => {
-  const btn = e.target.closest('button');
-  if (!btn) return;
-  const item = btn.closest('.history-item');
-  const id = item.dataset.id;
-  const idx = state.history.findIndex(h => h.id === id);
-  if (idx === -1) return;
-
-  if (btn.classList.contains('del')){
-    state.history.splice(idx, 1);
-    saveHistoryToStorage();
-    renderHistory();
-    toast('Đã xóa mục lịch sử');
-  }
-  else if (btn.classList.contains('restore')){
-    const it = state.history[idx];
-    const tabBtn = Array.from($$('.tab-btn')).find(b => b.textContent.trim() === it.mode);
-    if (tabBtn){
-      tabBtn.click();
-      const resultEl = $(PANEL_RESULT[tabBtn.dataset.panel]);
-      if (resultEl){
-        resultEl.className = 'result';
-        resultEl.innerHTML = it.html;
-      }
-      window.scrollTo({top:0, behavior:'smooth'});
-      toast('Đã khôi phục kết quả');
-    }
-  }
-});
-
-$('save-history-btn').addEventListener('click', () => {
-  const cur = getCurrentResult();
-  if (!cur){ toast('Không có kết quả hợp lệ để lưu', 'error'); return; }
-  state.history.unshift({
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
-    mode: cur.mode,
-    time: new Date().toLocaleString('vi-VN'),
-    content: cur.html
-  });
-  if (state.history.length > 100) state.history.length = 100;
-  saveHistoryToStorage();
-  renderHistory();
-  toast('Đã lưu vào lịch sử');
-});
-
-$('clear-history-btn').addEventListener('click', () => {
-  if (!state.history.length) return toast('Lịch sử đã trống');
-  if (confirm('Xóa toàn bộ lịch sử?')){
-    state.history = [];
-    saveHistoryToStorage();
-    renderHistory();
-    toast('Đã xóa toàn bộ lịch sử');
-  }
-});
-
-const searchHistoryDebounced = debounce(renderHistory, 180);
-$('history-search').addEventListener('input', e => {
-  state.searchTerm = e.target.value;
-  searchHistoryDebounced();
-});
-
-/* ========== COPY ========== */
-$('copy-result-btn').addEventListener('click', () => {
-  const cur = getCurrentResult();
-  if (!cur) return toast('Không có kết quả để sao chép', 'error');
-  const tmp = document.createElement('div');
-  tmp.innerHTML = cur.html;
-  const text = `[${cur.mode}]\n` + tmp.innerText.replace(/\n{3,}/g, '\n\n').trim();
-  navigator.clipboard.writeText(text)
-    .then(() => toast('Đã sao chép kết quả'))
-    .catch(() => toast('Không thể sao chép', 'error'));
-});
-
-/* ========== SHORTCUTS ========== */
-document.addEventListener('keydown', e => {
-  const ctrl = e.ctrlKey || e.metaKey;
-  if (ctrl && e.key.toLowerCase() === 's'){
-    e.preventDefault();
-    $('save-history-btn').click();
-  } else if (ctrl && e.key === '/'){
-    e.preventDefault();
-    $('history-search').focus();
-  }
-});
-
-/* ========== INIT ========== */
-function init(){
-  applyTheme();
-  applyScale();
-  renderSubjects();
-  computeAll();
-  renderHistory();
-  // Khôi phục trạng thái sort select (không cần thiết lắm)
-}
-init();
-
-})();
-</script>
+  <!-- Modular Scripts -->
+  <script src="js/thpt-calculator.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

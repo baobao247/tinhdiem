@@ -773,23 +773,21 @@ document.addEventListener('keydown', e => {
       const ut = parseFloat($('thpt-ut').value) || 0;
 
       const resBox = $('result-thpt');
-
-      if ([toan, van, anh, tohop, tb12].some(v => isNaN(v) || v < 0 || v > 10)) {
+      const calcEngine = window.THPTCalculator || (typeof THPTCalculator !== 'undefined' ? THPTCalculator : null);
+      if (!calcEngine) {
         resBox.className = 'result error';
-        resBox.textContent = 'Vui lòng nhập đầy đủ và hợp lệ điểm các bài thi và TB lớp 12 (0 - 10)!';
+        resBox.textContent = 'Lỗi: Không tìm thấy module tính điểm THPT.';
         return;
       }
 
-      // Kiểm tra điểm liệt <= 1.0
-      const isLiet = [toan, van, anh, tohop].some(v => v <= 1.0);
+      const res = calcEngine.calculateGraduation({ toan, van, anh, tohop, tb12, kk, ut });
+      if (!res.success) {
+        resBox.className = 'result error';
+        resBox.textContent = res.error;
+        return;
+      }
 
-      // Công thức tốt nghiệp Bộ GD&ĐT:
-      // DiemTN = [((Tong4Bai / 4) * 7 + (TB12 * 3)) / 10] + (KK / 4) + UT
-      const tong4Bai = toan + van + anh + tohop;
-      const diemTN = (((tong4Bai / 4) * 7 + (tb12 * 3)) / 10) + (kk / 4) + ut;
-      const rounded = Math.round(diemTN * 100) / 100;
-      const isPass = !isLiet && rounded >= 5.0;
-
+      const { rounded, isLiet, isPass, avg4Bai } = res;
       resBox.className = 'result ' + (isPass ? 'success' : 'danger');
       resBox.innerHTML = `
         <div class="big-value">
@@ -800,7 +798,7 @@ document.addEventListener('keydown', e => {
           ${isLiet ? '❌ KHÔNG ĐỖ (Có môn bị dính điểm liệt ≤ 1.0)' : isPass ? '🎉 ĐỦ ĐIỀU KIỆN TỐT NGHIỆP THPT!' : '❌ CHƯA ĐỦ ĐIỀU KIỆN TỐT NGHIỆP (< 5.0 điểm)'}
         </div>
         <div style="font-size:0.82rem; color:var(--text-muted); margin-top:6px;">
-          Điểm 4 bài thi TB: <strong>${(tong4Bai/4).toFixed(2)}</strong> · TB lớp 12: <strong>${tb12}</strong> · Khuyến khích: <strong>${kk}</strong> · Ưu tiên: <strong>${ut}</strong>
+          Điểm 4 bài thi TB: <strong>${avg4Bai.toFixed(2)}</strong> · TB lớp 12: <strong>${tb12}</strong> · Khuyến khích: <strong>${kk}</strong> · Ưu tiên: <strong>${ut}</strong>
         </div>
       `;
       resBox.classList.remove('empty');
@@ -817,37 +815,41 @@ document.addEventListener('keydown', e => {
       const m3 = parseFloat($('dh-m3').value);
       const kv = parseFloat($('dh-kv').value) || 0;
       const dt = parseFloat($('dh-dt').value) || 0;
+      const khoi = $('dh-khoi').value;
       const resBox = $('result-dh');
 
-      if ([m1, m2, m3].some(v => isNaN(v) || v < 0 || v > 10)) {
+      const calcEngine = window.THPTCalculator || (typeof THPTCalculator !== 'undefined' ? THPTCalculator : null);
+      if (!calcEngine) {
         resBox.className = 'result error';
-        resBox.textContent = 'Vui lòng nhập đầy đủ điểm 3 môn từ 0 đến 10!';
+        resBox.textContent = 'Lỗi: Không tìm thấy module tính điểm THPT.';
         return;
       }
 
-      const rawSum = m1 + m2 + m3;
-      let totalUt = kv + dt;
-
-      // Công thức giảm điểm ưu tiên mới nhất của Bộ GD&ĐT cho thí sinh đạt từ 22.5 điểm trở lên:
-      // DiemUT = [(30 - TongDiem) / 7.5] * MucDiemUTQuyDinh
-      if (rawSum >= 22.5 && totalUt > 0) {
-        totalUt = ((30 - rawSum) / 7.5) * totalUt;
+      const res = calcEngine.calculateUniversity({ m1, m2, m3, kv, dt, khoi });
+      if (!res.success) {
+        resBox.className = 'result error';
+        resBox.textContent = res.error;
+        return;
       }
 
-      const finalScore = Math.min(30, rawSum + totalUt);
-      const khoi = $('dh-khoi').value;
-
+      const { rawSum, adjustedUt, total, isDecreasedUt } = res;
       resBox.className = 'result success';
       resBox.innerHTML = `
         <div class="big-value">
-          <span class="num">${finalScore.toFixed(2)}</span>
+          <span class="num">${total.toFixed(2)}</span>
           <span class="sub">Tổng điểm xét tuyển (${khoi})</span>
         </div>
         <div style="font-size:0.88rem; color:var(--text); margin-top:8px;">
-          Điểm 3 môn gốc: <strong>${rawSum.toFixed(2)}</strong> + Điểm ưu tiên: <strong>${totalUt.toFixed(2)}</strong>
+          Điểm 3 môn gốc: <strong>${rawSum.toFixed(2)}</strong> + Điểm ưu tiên: <strong>${adjustedUt.toFixed(2)}</strong>
         </div>
         <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">
-          ${rawSum >= 22.5 ? '⚡ Đã áp dụng công thức giảm trừ điểm ưu tiên cho mức điểm từ 22.5 trở lên theo quy chế Bộ GD&ĐT.' : 'Mức điểm ưu tiên tối đa theo khu vực & đối tượng.'}
+          ${isDecreasedUt ? '⚡ Đã áp dụng công thức giảm trừ điểm ưu tiên cho mức điểm từ 22.5 trở lên theo quy chế Bộ GD&ĐT.' : 'Mức điểm ưu tiên theo khu vực & đối tượng.'}
+        </div>
+      `;
+      resBox.classList.remove('empty');
+      saveHistoryItem(`Xét Tuyển ĐH (${khoi})`, `${total.toFixed(2)} điểm (Gốc: ${rawSum.toFixed(2)} + UT: ${adjustedUt.toFixed(2)})`);
+    });
+  }
         </div>
       `;
       resBox.classList.remove('empty');

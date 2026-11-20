@@ -850,12 +850,6 @@ document.addEventListener('keydown', e => {
       saveHistoryItem(`Xét Tuyển ĐH (${khoi})`, `${total.toFixed(2)} điểm (Gốc: ${rawSum.toFixed(2)} + UT: ${adjustedUt.toFixed(2)})`);
     });
   }
-        </div>
-      `;
-      resBox.classList.remove('empty');
-      saveHistoryItem(`Xét Đại Học ${khoi}`, `${finalScore.toFixed(2)} điểm (Gốc: ${rawSum.toFixed(2)})`);
-    });
-  }
 })();
 
 /* ========== INIT ========== */
